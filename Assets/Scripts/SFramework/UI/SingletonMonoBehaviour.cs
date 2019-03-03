@@ -1,11 +1,25 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：框架中提供了两个单例模式的模板，此类为继承MonoBehaviour的模板
+    作用：易于实现单例模式
+    使用：继承该单例类即可
+    补充：注意单例类的构造函数必须是private的，这样才能确保类只有一个对象，不让外部类实例化该类
+          单例类不能够被继承
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework
 {
     /// <summary>
-    /// 单例模板，要求T继承Mono
+    /// 单例模板，要求T（类）继承MonoBehaviour
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class SingletonMonoBehaviour<T> : MonoBehaviour where T : MonoBehaviour

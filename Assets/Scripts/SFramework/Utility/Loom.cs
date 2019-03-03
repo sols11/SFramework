@@ -1,6 +1,5 @@
 ﻿/*----------------------------------------------------------------
             // Copyright © 2016 Jhon
-            // 
             // FileName: Loom.cs
             // Describle:
             // Created By:  Jhon

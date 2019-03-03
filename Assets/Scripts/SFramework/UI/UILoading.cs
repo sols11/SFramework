@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：实现异步加载的UI进度条
+    作用：Loading场景作为异步的中转站
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +19,7 @@ using UnityEngine.SceneManagement;
 
 namespace SFramework
 {
-    public class UILoading:MonoBehaviour
+    public class UILoading : MonoBehaviour
     {
         public static string nextScene = "Main";    // 静态传值
         public Image fillImg;
