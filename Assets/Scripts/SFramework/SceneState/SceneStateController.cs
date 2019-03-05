@@ -14,6 +14,8 @@ History:
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using System.Collections.Generic;
+using System;
 
 namespace SFramework
 {
@@ -30,9 +32,22 @@ namespace SFramework
 	{
 		public ISceneState CurrentState { get; private set; }   // 当前场景
 		private bool isSceneBegin = false;                      // 场景是否已经加载
+        private Dictionary<string, ISceneState> stateDict;      // <StateName, SceneState>对应字典
 
-		public SceneStateController()
+        public SceneStateController()
 		{ }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public void SetState<T>() where T: ISceneState, new()
+        {
+            // 用泛型方法<T>将state添加到list，之后set state时传入字符串参数，直接检索该字符串对应的state
+            ISceneState state = new T();
+            state.Awake(this);
+            // stateDict.Add(state.SceneName, state);
+        }
 
         /// <summary>
         /// 设置当前场景
@@ -43,7 +58,7 @@ namespace SFramework
             switch (sceneState)
             {
                 case SceneState.StartScene:
-                    state = new StartState(this);
+                    state = new StartScene();
                     break;
                 default:
                     return;
@@ -60,12 +75,12 @@ namespace SFramework
             {
                 if (isAsync)
                 {
-                    UILoading.nextScene = state.StateName;
+                    UILoading.nextScene = state.SceneName;
                     LoadScene("Loading");
                 }
                 else
                 {
-                    LoadScene(state.StateName);
+                    LoadScene(state.SceneName);
                 }
             }
             // 设置当前场景

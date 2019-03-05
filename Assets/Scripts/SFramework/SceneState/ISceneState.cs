@@ -21,25 +21,30 @@ namespace SFramework
 	/// </summary>
 	public abstract class ISceneState
 	{
-		public string StateName { get; set; }
+		public string SceneName { get; set; }                       // UnityScene文件对应的名称，即需要加载的场景名称
+        protected SceneStateController Controller { get; set; }     // 控制者
 
-		// 控制者
-		protected SceneStateController controller = null;
-
-		// 建構者
-		public ISceneState(SceneStateController controller)
+		public ISceneState()
 		{
-		    this.controller = controller;
 		}
 
-		public virtual void StateBegin(){ }
+        /// <summary>
+        /// 提供给SceneStateController调用，设置场景状态机
+        /// </summary>
+        /// <param name="controller"></param>
+        public virtual void Awake(SceneStateController controller)
+        {
+            Controller = controller;
+        }
+
+        public virtual void StateBegin(){ }
 		public virtual void StateEnd(){ }
 		public virtual void StateUpdate(){ }
 		public virtual void FixedUpdate(){ }
 
 		public override string ToString()
 		{
-		    return StateName;
+		    return SceneName;
 		}
 
 
