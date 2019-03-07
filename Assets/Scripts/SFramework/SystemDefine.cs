@@ -1,15 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：系统全局变量定义文件
+    作用：定义系统的全局变量，在本文件保存除UI外所有全局公共枚举。UI相关的全局变量放在Common.cs文件中
+    使用：可以直接为契合项目而修改本文件，设置你需要的全局变量（包括枚举类型）
+    补充：
+History:
+----------------------------------------------------------------------------*/
 
 namespace SFramework
 {
     /// <summary>
-    /// 定义系统的全局变量，在本文件保存所有全局公共枚举，UI相关的放在Common
+    /// 系统全局变量设置
     /// </summary>
     public static class SystemDefine
     {
-
+        // 填写全局变量
 
     }
 
@@ -30,6 +39,14 @@ namespace SFramework
         PlayerWeapon = 12,
         EnemyWeapon = 13,
         Without = 14,
+    }
+
+    /// <summary>
+    /// 场景状态类枚举，目前框架并不需要修改枚举来加载场景。可自行选择如何使用
+    /// </summary>
+    public enum SceneState
+    {
+        StartScene,
     }
 
     /// <summary>

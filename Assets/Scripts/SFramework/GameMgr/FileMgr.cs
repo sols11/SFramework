@@ -1,11 +1,27 @@
-﻿using System.IO;    //StreamWriter,StreamReader FileInfo
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：负责数据库、配置文件、设置、存档等文件的读取和写入，提供序列化和反序列化功能
+    作用：方便开发者序列化和反序列化文件
+    使用：调用接口即可。需要配合LitJson插件，框架中已存放
+    补充：通过调用JsonMapper.ToJson(_object); 将object序列化为string
+           调用JsonMapper.ToObject<T>(_string); 将string反序列化为T
+History:
+    TODO：将所有已加载的文件缓存下来，选择是否回收
+    TODO：增加更多文件类型的支持
+----------------------------------------------------------------------------*/
+
+using System.IO;    // StreamWriter, StreamReader FileInfo
 using LitJson;
 using UnityEngine;
 
 namespace SFramework
 {
     /// <summary>
-    /// 负责Json数据库、配置文件、设置存档的读取和写入，提供Json序列化和反序列化
+    /// 文件管理者
     /// </summary>
     public class FileMgr : IGameMgr
     {
@@ -53,7 +69,6 @@ namespace SFramework
             return default(T);
         }
 
-        
         public void CreateJsonSaveData(string _name, object _object)
         {
             if (File.Exists(_name + ".json"))   // 检查存在
@@ -78,7 +93,6 @@ namespace SFramework
             return default(T);
         }
 
-
         /// <summary>
         /// 将对象序列化为string
         /// </summary>
@@ -90,6 +104,7 @@ namespace SFramework
             serializedString = JsonMapper.ToJson(_object);
             return serializedString;
         }
+
         /// <summary>
         /// 将string反序列化为对象
         /// </summary>

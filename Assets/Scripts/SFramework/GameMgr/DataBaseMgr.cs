@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：游戏数据库（默认基于Json）
+    作用：存放游戏中的所有装备、道具等数据，提供给游戏中数据对象使用。
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +19,6 @@ namespace SFramework
 {
     /// <summary>
     /// 游戏数据库
-    /// 存放游戏中的所有装备、道具数据
     /// </summary>
     public class DataBaseMgr : IGameMgr
     {

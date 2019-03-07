@@ -9,6 +9,7 @@ Description:
     使用：对当前场景状态执行场景初始化、更新、释放。枚举SceneState并在SetState时用switch语句加载相应的场景
     补充：
 History:
+    2019/03/07 简化了场景的加载和存放方式
 ----------------------------------------------------------------------------*/
 
 using UnityEngine;
@@ -19,12 +20,6 @@ using System;
 
 namespace SFramework
 {
-    // 每添加一个场景状态类，都需要修改enum和switch
-    public enum SceneState
-    {
-        StartScene,
-    }
-
 	/// <summary>
 	/// 场景状态机
 	/// </summary>
@@ -38,30 +33,24 @@ namespace SFramework
 		{ }
 
         /// <summary>
-        /// 
+        /// 设置当前场景（加载场景）
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public void SetState<T>() where T: ISceneState, new()
+        /// <typeparam name="T">需要加载的场景类</typeparam>
+        /// <param name="isNow"></param>
+        /// <param name="isAsync"></param>
+        public void SetState<T>(bool isNow = true, bool isAsync = false) where T: ISceneState, new()
         {
-            // 用泛型方法<T>将state添加到list，之后set state时传入字符串参数，直接检索该字符串对应的state
+            // 用泛型方法<T>创建新场景状态state，并将state添加到dict，通过state.SceneName加载对应场景
             ISceneState state = new T();
-            state.Awake(this);
-            // stateDict.Add(state.SceneName, state);
-        }
-
-        /// <summary>
-        /// 设置当前场景
-        /// </summary>
-        public void SetState(SceneState sceneState, bool isNow = true, bool isAsync = false)
-        {
-            ISceneState state;
-            switch (sceneState)
+            if (stateDict.ContainsKey(state.SceneName))
             {
-                case SceneState.StartScene:
-                    state = new StartScene();
-                    break;
-                default:
-                    return;
+                Debug.Log(state.SceneName + "is contained.");
+                state = stateDict[state.SceneName];  // 替换掉原来的state
+            }
+            else
+            {
+                state.Awake(this);
+                stateDict.Add(state.SceneName, state);
             }
 
             Debug.Log("SetState:" + state.ToString());

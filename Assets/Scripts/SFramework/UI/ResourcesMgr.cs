@@ -4,17 +4,17 @@ Author:
 Date:
     2017/08/01
 Description:
-    简介：负责场景中游戏对象的加载，对象全部来源于Resources文件夹，可使用缓冲池技术
-    作用：封装了Unity的Resources资源加载功能并进行管理，可以动态加载所有的资源。使用了缓冲池，智能清理等技术，提供哈希表和字典两个不同的缓冲容器，提供加载和克隆两个不同的资源操作。
-    使用：继承该单例类即可
-    补充：智能清理：若缓冲池的GO还没有active=false时创建新GameObject，并在一定时间后销毁。GO也可以选择不使用这里提供的缓冲池
+    简介：封装了Unity的Resources资源加载功能并进行管理，可以动态加载所有的资源。使用了缓冲池，智能清理等技术，
+          提供哈希表和字典两个不同的缓冲容器，提供加载和克隆两个不同的资源操作。
+    作用：负责场景中游戏对象的动态加载，加载的对象来源于Resources文件夹，被加载的对象可使用缓冲池技术。
+    使用：调用接口即可
+    补充：智能清理：若缓冲池的GameObject还没有active==false时创建新GameObject，并在一定时间后销毁。加载GameObject时也可以选择不使用这里提供的缓冲池
 History:
 ----------------------------------------------------------------------------*/
 
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace SFramework
 {
@@ -23,21 +23,21 @@ namespace SFramework
     /// </summary>
     public class ResourcesMgr : IGameMgr
     {
-        private Hashtable ht = null;                        //容器键值对集合
-        private Dictionary<string,GameObject> dicGO;        //克隆物体存储字典
+        private Hashtable resourcesHashTable = null;                 // 容器键值对集合,存放已加载的资源
+        private Dictionary<string,GameObject> gameObjectDict;        // 克隆物体存储字典
         private float autoDestroyTime = 10;
 
-        public ResourcesMgr(GameMainProgram gameMain):base(gameMain)
-		{
-            //字段初始化
-            ht = new Hashtable();
-            dicGO = new Dictionary<string, GameObject>();
+        public ResourcesMgr(GameMainProgram gameMain) : base(gameMain)
+        {
+            // 字段初始化
+            resourcesHashTable = new Hashtable();
+            gameObjectDict = new Dictionary<string, GameObject>();
         }
 
         public override void Release()
         {
-            ht.Clear();
-            dicGO.Clear();
+            resourcesHashTable.Clear();
+            gameObjectDict.Clear();
         }
 
         /// <summary>
@@ -47,12 +47,12 @@ namespace SFramework
         /// <param name="path"></param>
         /// <param name="isCatch">是否加入缓冲池</param>
         /// <returns></returns>
-        public T LoadResource<T>(string path, bool isCatch=false) where T : Object
+        public T LoadResource<T>(string path, bool isCatch = false) where T : Object
         {
-            if (ht.Contains(path))
+            if (resourcesHashTable.Contains(path))
             {
                 Debug.Log("Contain");
-                return ht[path] as T;
+                return resourcesHashTable[path] as T;
             }
 
             T TResource = Resources.Load<T>(path);
@@ -62,37 +62,38 @@ namespace SFramework
             }
             else if (isCatch)
             {
-                ht.Add(path, TResource);
+                resourcesHashTable.Add(path, TResource);
             }
 
             return TResource;
         }
+
         /// <summary>
         /// 按预制位置克隆，如UI
         /// </summary>
         /// <param name="path"></param>
         /// <param name="isCatch"></param>
         /// <returns></returns>
-        public GameObject LoadAsset(string path, bool isCatch=false)
+        public GameObject LoadAsset(string path, bool isCatch = false)
         {
-            if (dicGO.ContainsKey(path))
+            if (gameObjectDict.ContainsKey(path))
             {
-                Debug.Log("ContainGO");
-                dicGO[path].SetActive(true);
-                return dicGO[path];
+                Debug.Log("ContainGameObject");
+                gameObjectDict[path].SetActive(true);
+                return gameObjectDict[path];
             }
-            GameObject goObj = Resources.Load<GameObject>(path);
-            if (goObj != null)
+            GameObject gameObjectLoaded = Resources.Load<GameObject>(path);
+            if (gameObjectLoaded != null)
             {
-                goObj = GameObject.Instantiate(goObj);
+                gameObjectLoaded = GameObject.Instantiate(gameObjectLoaded);
                 if (isCatch)
-                    dicGO.Add(path, goObj);
+                    gameObjectDict.Add(path, gameObjectLoaded);
             }
             else
             {
                 Debug.LogError(GetType() + "/LoadAsset()/克隆资源不成功，请检查。 path=" + path);
             }
-            return goObj;
+            return gameObjectLoaded;
         }
 
         /// <summary>
@@ -101,37 +102,38 @@ namespace SFramework
         /// <param name="path"></param>
         /// <param name="isCatch">是否加入缓冲池</param>
         /// <returns></returns>
-        public GameObject LoadAsset(string path, bool isCatch,Vector3 _position,Quaternion _rotation)
+        public GameObject LoadAsset(string path, bool isCatch,Vector3 position,Quaternion rotation)
         {
-            if (dicGO.ContainsKey(path))
+            if (gameObjectDict.ContainsKey(path))
             {
-                dicGO[path].transform.position = _position;
-                dicGO[path].transform.rotation = _rotation;
-                if (dicGO[path].activeSelf == false)
+                gameObjectDict[path].transform.position = position;
+                gameObjectDict[path].transform.rotation = rotation;
+                // 缓冲池中已存在可用对象
+                if (gameObjectDict[path].activeSelf == false)
                 {
-                    dicGO[path].SetActive(true);
-                    return dicGO[path];
+                    gameObjectDict[path].SetActive(true);
+                    return gameObjectDict[path];
                 }
                 else
                 {
-                    GameObject _goObj = GameObject.Instantiate(dicGO[path], _position, _rotation);
-                    GameObject.Destroy(_goObj, autoDestroyTime); //10s后清理掉多出来的GO
-                    return _goObj;
+                    GameObject newGameObject = GameObject.Instantiate(gameObjectDict[path], position, rotation);
+                    GameObject.Destroy(newGameObject, autoDestroyTime); // 10s后清理掉多出来的GO
+                    return newGameObject;
                 }
             }
-            GameObject goObj = Resources.Load<GameObject>(path);
-            if (goObj != null)
+            GameObject gameObjectLoaded = Resources.Load<GameObject>(path);
+            if (gameObjectLoaded != null)
             {
-                goObj = GameObject.Instantiate(goObj, _position, _rotation);
+                gameObjectLoaded = GameObject.Instantiate(gameObjectLoaded, position, rotation);
                 if(isCatch)
-                    dicGO.Add(path, goObj);
+                    gameObjectDict.Add(path, gameObjectLoaded);
             }
             else
             {
                 Debug.LogError(GetType() + "/LoadAsset()/克隆资源不成功，请检查。 path=" + path);
             }
-            return goObj;
+            return gameObjectLoaded;
         }
-    }//Class_end
+    } // Class_end
 }
 
