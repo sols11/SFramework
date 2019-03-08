@@ -55,7 +55,7 @@ namespace SFramework
 		void Start()
 		{
 			// 要测试的场景，默认
-			sceneStateController.SetState(SceneState.StartScene, false);
+			sceneStateController.SetState<StartScene>(false);
 		}
 
 		void Update()

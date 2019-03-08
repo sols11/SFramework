@@ -87,7 +87,7 @@ namespace SFramework
 		// 更新
 		public void StateUpdate()
 		{
-			// 是否還在载入
+			// 是否还在载入
 			if (Application.isLoadingLevel)
 				return;
 
@@ -111,7 +111,7 @@ namespace SFramework
 				CurrentState.FixedUpdate();
 		}
 
-        public void ExitGame()
+        public void ExitApplication()
         {
             isSceneBegin = false;
 
