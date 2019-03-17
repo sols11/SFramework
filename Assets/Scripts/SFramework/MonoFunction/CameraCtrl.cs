@@ -1,15 +1,29 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：相机控制系统
+    作用：
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework {
+
     /// <summary>
     /// Camera控制器，建议直接挂在MainCamera上
     /// </summary>
     public class CameraCtrl : MonoBehaviour {
         private static CameraCtrl _instance;
         private Camera mainCamera;
-        private Y_shake shakeComponent;
+        private ShakeObject shakeComponent;
 
         public static CameraCtrl Instance
         {
@@ -39,16 +53,19 @@ namespace SFramework {
             mainCamera = Camera.main;
             if (mainCamera)
             {
-                shakeComponent = mainCamera.GetComponent<Y_shake>();
+                shakeComponent = mainCamera.GetComponent<ShakeObject>();
             }
         }
 
-        public void ShakeMainCamera(Vector3 _directionStregth,float _startTime=0,float _Speed=1)
+        public void ShakeMainCamera(Vector3 _directionStregth, float _startTime = 0, float _Speed = 1)
         {
-            shakeComponent.directionStrength = _directionStregth;
-            shakeComponent.startTime = _startTime;
-            shakeComponent.Speed = _Speed;
-            shakeComponent.enabled = true;
+            if (shakeComponent != null)
+            {
+                shakeComponent.directionStrength = _directionStregth;
+                shakeComponent.startTime = _startTime;
+                shakeComponent.speed = _Speed;
+                shakeComponent.enabled = true;
+            }
         }
 
         /// <summary>

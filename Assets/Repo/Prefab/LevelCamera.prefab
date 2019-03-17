@@ -51,6 +51,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4630704137892834}
   - component: {fileID: 54635644643927216}
+  - component: {fileID: 114767185305769334}
   m_Layer: 0
   m_Name: LevelCamera
   m_TagString: Untagged
@@ -70,6 +71,8 @@ GameObject:
   - component: {fileID: 124226206914091200}
   - component: {fileID: 81248149933185974}
   - component: {fileID: 114301918321812484}
+  - component: {fileID: 114901403763629722}
+  - component: {fileID: 114021686393552890}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -226,6 +229,17 @@ AudioListener:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1828895172142280}
   m_Enabled: 1
+--- !u!114 &114021686393552890
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1828895172142280}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c66ac2c76505f0445a400b22f1c1d83b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114301918321812484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,6 +251,82 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 73cfbd177624590419c267e620bfeb8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114767185305769334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1420911821555450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1cde2eaae062a54d8765dcfb6cababb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_MoveSpeed: 10
+  m_AutoTarget: 1
+  m_TargetEnemy: 0
+  m_UpdateType: 0
+  transparentCam: {fileID: 0}
+  playerTransform: {fileID: 0}
+  enemyTransform: {fileID: 0}
+  distance: 0
+  offsetZ: -0.5
+--- !u!114 &114901403763629722
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1828895172142280}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b62394dd1b8b4045b90c781339341a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startTime: 1
+  directionStrength: {x: 0, y: 1, z: 0}
+  speed: 1
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.13
+      value: 0.4
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.33
+      value: -0.33
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.5
+      value: 0.17
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 0.71
+      value: -0.12
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!124 &124226206914091200
 Behaviour:
   m_ObjectHideFlags: 1

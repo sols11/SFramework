@@ -1,16 +1,16 @@
-﻿/***
- * 
- *    Title: "SUIFW" UI框架项目
- *           主题： Unity 帮助脚本
- *    Description: 
- *           功能： 提供程序用户一些常用的功能方法实现，方便程序员快速开发。
- *                  
- *    Date: 2017
- *    Version: 0.1版本
- *    Modify Recoder: 
- *    
- *   
- */
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：Unity 帮助脚本
+    作用：提供程序用户一些常用的功能方法实现，方便程序员快速开发。
+    使用：静态方法调用
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
