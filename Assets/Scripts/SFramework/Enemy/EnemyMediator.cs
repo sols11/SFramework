@@ -27,7 +27,7 @@ namespace SFramework
             {
                 EnemyMono.EnemyMedi = this;
                 EnemyMono.AnimatorComponent = Enemy.animator;
-                EnemyMono.Rg2d = Enemy.Rg2d;
+                EnemyMono.Rgbd = Enemy.Rgbd;
                 EnemyWeapon = EnemyMono.iEnemyWeapon;
                 EnemyMono.Initialize();
                 if (EnemyWeapon != null)

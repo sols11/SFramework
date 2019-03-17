@@ -1,4 +1,18 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：UI继承的基类
+    作用：设置3个枚举的值
+          提供4种生命周期状态供外界调用
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,29 +21,25 @@ namespace SFramework
 {
     public class ViewBase : MonoBehaviour
     {
-        /*字段*/
-        // 对UIMgr的引用将在生成该UI时赋值
-        private UIManager uiManager;
-        //UI窗体（位置）类型
+        // 字段
         private UIFormType _UIForm_Type = UIFormType.Normal;
-        //UI窗体显示类型
         private UIFormShowMode _UIForm_ShowMode = UIFormShowMode.Normal;
-        //UI窗体透明度类型
         private UIFormLucenyType _UIForm_LucencyType = UIFormLucenyType.Lucency;
 
-        /* 属性*/
-        public UIManager UI_Manager { get { return uiManager; } set { uiManager = value; } }
+        // 属性
+        // 对UIMgr的引用将在生成该UI时赋值
+        public UIManager UI_Manager { get; set; }
         public UIMaskMgr UI_MaskMgr { get; set; }
-        public LanguageMgr Language_Mgr { get; set; }
+        public LanguageMgr LanguageMgr { get; set; }
 
+        // UI窗体（位置）类型
         public UIFormType UIForm_Type { get { return _UIForm_Type; }set { _UIForm_Type = value; } }
-
+        // UI窗体显示类型
         public UIFormShowMode UIForm_ShowMode { get { return _UIForm_ShowMode; } set { _UIForm_ShowMode = value; } }
-
+        // UI窗体透明度类型
         public UIFormLucenyType UIForm_LucencyType { get { return _UIForm_LucencyType; } set { _UIForm_LucencyType = value; } }
 
         public virtual void UpdateUI() { }
-    
 
         #region  窗体的四种(生命周期)状态
 
@@ -40,7 +50,7 @@ namespace SFramework
         {
             this.gameObject.SetActive(true);
             //设置模态窗体调用(必须是弹出窗体)
-            if (_UIForm_Type == UIFormType.PopUp)
+            if (UIForm_Type == UIFormType.PopUp)
             {
                 if(UI_MaskMgr!=null)
                     UI_MaskMgr.SetMaskWindow(this.gameObject, UIForm_LucencyType);
@@ -125,12 +135,12 @@ namespace SFramework
         /// <param name="fontChoose">默认0，1强制CN字体，2强制EN字体。其他数字：简中CN字体，英语EN字体</param>
         public void ShowText(Text uiText,string stringId,int fontChoose=0)
         {
-            if (Language_Mgr == null)
-                Language_Mgr = GameMainProgram.Instance.languageMgr;
-            if (Language_Mgr != null)
+            if (LanguageMgr == null)
+                LanguageMgr = GameMainProgram.Instance.languageMgr;
+            if (LanguageMgr != null)
             {
-                uiText.text = Language_Mgr.ShowText(stringId);
-                uiText.font = Language_Mgr.GetFont(fontChoose);
+                uiText.text = LanguageMgr.ShowText(stringId);
+                uiText.font = LanguageMgr.GetFont(fontChoose);
             }
             else
                 uiText.text = string.Empty;

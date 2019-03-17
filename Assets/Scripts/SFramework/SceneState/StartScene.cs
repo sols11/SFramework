@@ -21,10 +21,10 @@ namespace SFramework
 	{
 		private GameMainProgram gameMainProgram;    // 主程序
 
-		public StartScene()
-		{
-			this.SceneName = "Start";
-		}
+        public StartScene(SceneStateController controller) : base(controller)
+        {
+            this.SceneName = "Start";
+        }
 
         public override void StateBegin()
         {
@@ -37,14 +37,15 @@ namespace SFramework
 			gameMainProgram.Release();
 		}
 
-		public override void StateUpdate()
-		{
-			gameMainProgram.Update();
-		}
-
 		public override void FixedUpdate()
 		{
 			gameMainProgram.FixedUpdate();
 		}
-	}
+
+        public override void StateUpdate()
+        {
+            gameMainProgram.Update();
+        }
+
+    }
 }

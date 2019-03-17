@@ -50,7 +50,7 @@ namespace SFramework
         public DataBaseMgr dataBaseMgr;
         public GameDataMgr gameDataMgr;
         public LanguageMgr languageMgr;
-        //public CoroutineMgr coroutineMgr; // 继承Mono的Mgr
+        //public CoroutineMgr coroutineMgr; // 继承Mono的Mgr，不需要通过GameMainProgram调用
         public PlayerMgr playerMgr;
         public EnemyMgr enemyMgr;
 	    public NpcMgr npcMgr;
@@ -63,7 +63,9 @@ namespace SFramework
 	    public SqlMgr sqlMgr;
 	    public ThreadMgr threadMgr;
 
-        // 注意单例类的构造函数必须是private的，这样才能确保类只有一个对象，不让外部类实例化该类
+        /// <summary>
+        /// 注意单例类的构造函数必须是private的，这样才能确保类只有一个对象，不让外部类实例化该类
+        /// </summary>
         private GameMainProgram() {
             // 构造
             resourcesMgr = new ResourcesMgr(this);
@@ -85,24 +87,25 @@ namespace SFramework
         }
 
         /// <summary>
-        /// 初次构造后的初始化(通常需要用到其他Mgr)
+        /// 初次构造后的初始化(Awake方法通常需要用到其他Mgr，因此需要在构造函数之后执行)
         /// </summary>
         public void Awake()
         {
             // 注意Awake不能放在构造函数内执行，因为这将导致主程序未构造完毕就开始使用，破坏了单例的存在，造成栈溢出错误
-            //dataBaseMgr.Awake();
-            //gameDataMgr.Awake();
-            //languageMgr.Awake();
+            dataBaseMgr.Awake();
+            languageMgr.Awake();
             uiManager.Awake();
-            //audioMgr.Awake();
+            audioMgr.Awake();
             //dialogMgr.Awake();
             //npcMgr.Awake();
+            Debug.Log("框架初始化完成");
         }
 
-        // 有要执行的方法再添加到这里
+        /// <summary>
+        /// 每次场景加载后调用
+        /// </summary>
         public void Initialize()
 		{
-            // 场景重新加载后也会调用
             playerMgr.Initialize();
 			enemyMgr.Initialize();
             uiManager.Initialize();
@@ -110,9 +113,11 @@ namespace SFramework
             courseMgr.Initialize();
 		}
 
+        /// <summary>
+        /// 场景切换时调用
+        /// </summary>
 		public void Release()
 		{
-            // 场景切换
             resourcesMgr.Release();
 			playerMgr.Release();
 			enemyMgr.Release();
@@ -121,7 +126,15 @@ namespace SFramework
             uiMaskMgr.Release();
 		}
 
-		public void Update()
+        public void FixedUpdate()
+        {
+            resourcesMgr.FixedUpdate();
+            playerMgr.FixedUpdate();
+            enemyMgr.FixedUpdate();
+            uiManager.FixedUpdate();
+        }
+
+        public void Update()
 		{
             resourcesMgr.Update();
             playerMgr.Update();
@@ -130,13 +143,5 @@ namespace SFramework
             uiManager.Update();
             courseMgr.Update();
         }
-
-        public void FixedUpdate()
-		{
-            resourcesMgr.FixedUpdate();
-            playerMgr.FixedUpdate();
-			enemyMgr.FixedUpdate();
-            uiManager.FixedUpdate();
-		}
 	}
 }

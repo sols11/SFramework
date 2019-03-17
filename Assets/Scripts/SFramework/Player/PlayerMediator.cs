@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：中介者模式
+    作用：
+    使用：
+    补充：
+History:
+    TODO:装备这边尚未实现
+----------------------------------------------------------------------------*/
+
+using System;
 using UnityEngine;
 
 namespace SFramework
@@ -13,9 +27,9 @@ namespace SFramework
         public IPlayerMono PlayerMono { get; set; }
         public IPlayerWeapon PlayerWeapon { get; set; }
 
-        public PlayerMediator(IPlayer _player)
+        public PlayerMediator(IPlayer player)
         {
-            Player = _player;
+            Player = player;
         }
 
         public void Initialize()
@@ -24,7 +38,7 @@ namespace SFramework
             if (PlayerMono)
             {
                 PlayerMono.PlayerMedi= this;
-                PlayerMono.Rg2d = Player.Rg2d;
+                PlayerMono.Rgbd = Player.Rgbd;
                 PlayerMono.AnimatorComponent = Player.animator;
                 PlayerWeapon = PlayerMono.iPlayerWeapon;
                 PlayerMono.Initialize();
@@ -49,14 +63,12 @@ namespace SFramework
             UpdatePlayerWeapon(PlayerWeapon);
         }
 
-        
-
         /// <summary>
         /// 设置WeaponData，使用的是装备的武器
         /// 做强化系统时再加上强化的数值
         /// </summary>
         /// <param name="_weapon">哪一个PlayerWeapon</param>
-        private void UpdatePlayerWeapon(IPlayerWeapon _playerWeapon)
+        private void UpdatePlayerWeapon(IPlayerWeapon playerWeapon)
         {
         }
 

@@ -10,6 +10,7 @@ Description:
     补充：
 History:
     2019/03/07 简化了场景的加载和存放方式
+    2019/03/15 之前的想法太天真，revert回来了，还是要支持inspector下用enum调试，所以不能用泛型方法
 ----------------------------------------------------------------------------*/
 
 using UnityEngine;
@@ -20,39 +21,66 @@ using System;
 
 namespace SFramework
 {
-	/// <summary>
-	/// 场景状态机
-	/// </summary>
-	public class SceneStateController
+    /// <summary>
+    /// 场景状态类枚举。
+    /// 每添加一个SceneState，都需要修改enum和SetState方法的switch-case，一个场景可以对应多个SceneState
+    /// </summary>
+    public enum SceneState
+    {
+        StartScene,
+    }
+
+
+    /// <summary>
+    /// 场景状态机
+    /// </summary>
+    public class SceneStateController
 	{
 		public ISceneState CurrentState { get; private set; }   // 当前场景
 		private bool isSceneBegin = false;                      // 场景是否已经加载
-        private Dictionary<string, ISceneState> stateDict;      // <StateName, SceneState>对应字典
 
         public SceneStateController()
 		{ }
 
+        #region Legacy的加载场景方式
+        //private Dictionary<string, ISceneState> stateDict;      // <StateName, SceneState>对应字典
+        ///// <summary>
+        ///// 设置当前场景（加载场景）
+        ///// </summary>
+        ///// <typeparam name="T">需要加载的场景类</typeparam>
+        ///// <param name="isNow"></param>
+        ///// <param name="isAsync"></param>
+        //public void SetState<T>(bool isNow = true, bool isAsync = false) where T: ISceneState, new()
+        //{
+        //    // 用泛型方法<T>创建新场景状态state，并将state添加到dict，通过state.SceneName加载对应场景
+        //    ISceneState state = new T();
+        //    if (stateDict.ContainsKey(state.SceneName))
+        //    {
+        //        Debug.Log(state.SceneName + "is contained.");
+        //        state = stateDict[state.SceneName];  // 替换掉原来的state
+        //    }
+        //    else
+        //    {
+        //        state.Awake(this);
+        //        stateDict.Add(state.SceneName, state);
+        //    }
+        //}
+        #endregion
+
         /// <summary>
         /// 设置当前场景（加载场景）
         /// </summary>
-        /// <typeparam name="T">需要加载的场景类</typeparam>
-        /// <param name="isNow"></param>
-        /// <param name="isAsync"></param>
-        public void SetState<T>(bool isNow = true, bool isAsync = false) where T: ISceneState, new()
+        public void SetState(SceneState sceneState, bool isNow = true, bool isAsync = false)
         {
-            // 用泛型方法<T>创建新场景状态state，并将state添加到dict，通过state.SceneName加载对应场景
-            ISceneState state = new T();
-            if (stateDict.ContainsKey(state.SceneName))
+            ISceneState state;
+            switch (sceneState)
             {
-                Debug.Log(state.SceneName + "is contained.");
-                state = stateDict[state.SceneName];  // 替换掉原来的state
+                case SceneState.StartScene:
+                    state = new StartScene(this);
+                    break;
+                default:
+                    return;
             }
-            else
-            {
-                state.Awake(this);
-                stateDict.Add(state.SceneName, state);
-            }
-
             Debug.Log("SetState:" + state.ToString());
             isSceneBegin = false;
 
@@ -85,11 +113,19 @@ namespace SFramework
 		}
 
 		// 更新
-		public void StateUpdate()
+		public void FixedUpdate()
 		{
-			// 是否还在载入
-			if (Application.isLoadingLevel)
-				return;
+            if (Application.isLoadingLevel)
+                return;
+            if (CurrentState != null && isSceneBegin)
+				CurrentState.FixedUpdate();
+		}
+
+        public void StateUpdate()
+        {
+            // 是否还在载入
+            if (Application.isLoadingLevel)
+                return;
 
             // 通知新的State开始，因为不能保证StateBegin会在什么时候调用，所以放在Update中
             if (CurrentState != null && isSceneBegin == false)
@@ -100,16 +136,9 @@ namespace SFramework
 
             //状态的更新，需要StateBegin()执行完后才能执行
             if (CurrentState != null && isSceneBegin)
-				CurrentState.StateUpdate();
-		}
+                CurrentState.StateUpdate();
+        }
 
-		public void FixedUpdate()
-		{
-            if (Application.isLoadingLevel)
-                return;
-            if (CurrentState != null && isSceneBegin)
-				CurrentState.FixedUpdate();
-		}
 
         public void ExitApplication()
         {

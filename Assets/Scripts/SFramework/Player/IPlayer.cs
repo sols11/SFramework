@@ -1,27 +1,43 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：玩家角色的基类，玩家所拥有的各种存储信息
+    作用：
+    使用：
+    补充：
+History:
+    2019/03/12 添加了PlayerMediator等属性
+    TODO：专门建立一个数据类PlayerData来存放数据
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace SFramework
 {
     /// <summary>
-    /// + Player的所有属性
+    /// Player的所有属性
     /// </summary>
 	public class IPlayer : ICharacter
 	{
-		protected bool canMove = false;   //CanMovePosition
-		protected float h;
-		protected float v;
+		protected bool canMove = false;   // CanMovePosition
+		protected float h;  // 水平移动
+		protected float v;  // 垂直移动
         protected GameData gameData;
 
-		public float Speed { get; set; }    // AvoidSpeed用MoveSpeed*2代替
+		public float Speed { get; set; }
 
-        //Player的HP,SP需要更新UI
+        // set时调用UpdateHP_SP()
         public override int CurrentHP
         {
             get { return base.CurrentHP; }
-            set { base.CurrentHP = value;
+            set
+            {
+                base.CurrentHP = value;
                 UpdateHP_SP();
             }
         }
@@ -43,7 +59,9 @@ namespace SFramework
 			get { return canMove; }
 			set { h = 0; v = 0; canMove = value; }
 		}
-        
+		public bool CanRotate { get; set; }
+        public PlayerMediator PlayerMedi { get; set; }
+
         /// <summary>
         /// Initialize只在第一次创建时执行初始化代码，之后切换Scene时都不用再次初始化，所以Data也没有改变
         /// </summary>
@@ -53,9 +71,17 @@ namespace SFramework
             if (GameObjectInScene != null)
             {
                 animator = GameObjectInScene.GetComponent<Animator>();
-                Rg2d = GameObjectInScene.GetComponent<Rigidbody2D>();
+                Rgbd = GameObjectInScene.GetComponent<Rigidbody>();
+                // 关联中介者
+                PlayerMedi = new PlayerMediator(this);
+                PlayerMedi.Initialize();
             }
-        } 
+        }
+
+        public override void Release()
+        {
+            PlayerMedi.PlayerMono.Release();
+        }
 
         public virtual void Hurt(PlayerHurtAttr playerHurtAttr) { }
 
@@ -65,6 +91,9 @@ namespace SFramework
             GameMainProgram.Instance.eventMgr.InvokeEvent(EventName.PlayerDead);    // 触发死亡事件
         }
 
+        /// <summary>
+        /// 触发更新Player的HP和SP的事件。这常用于更新UI
+        /// </summary>
         private void UpdateHP_SP()
         {
             GameMainProgram.Instance.eventMgr.InvokeEvent(EventName.PlayerHP_SP);

@@ -1,4 +1,17 @@
-﻿using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：游戏角色的基类，角色包括Player, Enemy, NPC等
+    作用：提供一个角色模板，具备基本的属性和逻辑
+    使用：继承
+    补充：TODO:包含默认的基本属性，可根据需要修改。如果是2D游戏，Rigidbody需要改为Rigidbody2D
+History:
+----------------------------------------------------------------------------*/
+
+using UnityEngine;
 
 namespace SFramework
 {
@@ -9,14 +22,14 @@ namespace SFramework
     /// </summary>
     public class ICharacterMono : MonoBehaviour
     {
-        //语音，音效
+        // 语音，音效
         public AudioClip[] voice;
         public AudioClip[] sound;
-        //两个音源
+        // 两个音源
         private AudioSource[] allAudioSource = new AudioSource[2];
 
         public Animator AnimatorComponent { get; set; }
-        public Rigidbody2D Rg2d { get; set; }
+        public Rigidbody Rgbd { get; set; }
         
         /// <summary>
         /// 主武器的碰撞体
@@ -64,6 +77,15 @@ namespace SFramework
                 return;
             allAudioSource[1].clip = sound[index];
             allAudioSource[1].Play();
+        }
+
+        /// <summary>
+        /// 随机播放，注意帧事件不支持重载函数
+        /// </summary>
+        /// <param name="range"></param>
+        public virtual void PlayVoiceRandom(int index)
+        {
+            // 此为虚函数，具体自行实现
         }
     }
 }

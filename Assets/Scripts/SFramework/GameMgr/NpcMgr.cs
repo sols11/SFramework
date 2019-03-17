@@ -1,4 +1,17 @@
-﻿using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：NPC角色控制系统
+    作用：存储整个场景中的所有NPC，负责NPC角色的创建，管理，删除
+    使用：相较Player和Enemy，Npc创建更为简单，只需要用CreateNpc(string npcName)
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -6,8 +19,6 @@ namespace SFramework
 {
     /// <summary>
     /// NPC控制系统
-    /// 负责NPC的创建，管理，删除
-    /// 相较Player和Enemy，Npc创建更为简单，只需要用CreateNpc(string npcName)
     /// </summary>
     public class NpcMgr:IGameMgr
     {
@@ -25,9 +36,7 @@ namespace SFramework
             // 新的Npc在这里添加
             if (dicNpcPaths != null)
             {
-                dicNpcPaths.Add("Merchant", @"Npcs\NpcMerchant");
-                dicNpcPaths.Add("Recycler", @"Npcs\NpcRecycler");
-                dicNpcPaths.Add("Battler", @"Npcs\NpcBattler");
+                // dicNpcPaths.Add("Merchant", @"Npcs\NpcMerchant");
             }
         }
 
@@ -62,7 +71,7 @@ namespace SFramework
             }
             else
             {
-                Debug.LogError("Npc==null");
+                Debug.LogError("无法创建NPC，Npc==null");
             }
         }
 

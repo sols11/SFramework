@@ -39,22 +39,8 @@ namespace SFramework
         PlayerWeapon = 12,
         EnemyWeapon = 13,
         Without = 14,
-    }
-
-    /// <summary>
-    /// 场景状态类枚举，目前框架并不需要修改枚举来加载场景。可自行选择如何使用
-    /// </summary>
-    public enum SceneState
-    {
-        StartScene,
-    }
-
-    /// <summary>
-    /// 装备的特殊能力，敌我共用
-    /// </summary>
-    public enum SpecialAbility
-    {
-        无=0,
+        Wall = 15,
+        PostProcessing = 16,
     }
 
     /// <summary>
@@ -83,11 +69,11 @@ namespace SFramework
     /// </summary>
     public enum EnemyAction
     {
-        Hurt = 0, // 受伤
-        Defend = 1, // 轻攻击防御，重攻击被破防
-        Parry = 2, // 轻攻击防御，重攻击弹开
-        Shield = 3, // 轻重攻击都弹开
-        Miss = 4, // 未命中
+        Hurt = 0,       // 受伤
+        Defend = 1,     // 轻攻击防御，重攻击被破防
+        Parry = 2,      // 轻攻击防御，重攻击弹开
+        Shield = 3,     // 轻重攻击都弹开
+        Miss = 4,       // 未命中
     }
 
     public enum EnemyType

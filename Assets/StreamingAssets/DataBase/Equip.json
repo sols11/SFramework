@@ -1,0 +1,17 @@
+﻿{
+    "太刀": {
+        "Type": 3,
+        "IconPath": "Icons\\Weapon\\Katana",
+        "Name": "太刀",
+        "Detail": "精心加工而成的太刀，用各种方式斩杀怪物都不会有问题",
+        "CanSale": false,
+        "Price": 60,
+        "SalePrice": 30,
+        "HP": 0,
+        "SP": 0,
+        "Attack": 20,
+        "Defend": 0,
+        "Crit": 0,
+        "Speed": 0
+    }
+}

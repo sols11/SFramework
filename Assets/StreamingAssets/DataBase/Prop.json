@@ -1,0 +1,19 @@
+﻿[
+    {
+        "Id": 0,
+        "Type": 0,
+        "MaxNum": 10,
+        "IconPath": "Icons\\Prop\\RedMedicine",
+        "Name": "红血瓶",
+        "Detail": "可以携带，喝下后能够回复少量的HP。",
+        "CanSale": true,
+        "Price": 50,
+        "SalePrice": 25,
+        "HP": 50,
+        "SP": 0,
+        "Attack": 0,
+        "Defend": 0,
+        "Crit": 0,
+        "Speed": 0
+    }
+]

@@ -1,4 +1,17 @@
-﻿using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：存档包含的数据（包括游戏存档和设置存档）
+    作用：持久化数据
+    使用：根据自己需要保存的数据来编写
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using UnityEngine;
 using System.Collections.Generic;
 
 namespace SFramework
@@ -9,10 +22,10 @@ namespace SFramework
     /// </summary>
     public class GameData
     {
-        //密钥,用于防止拷贝存档// 
+        // 密钥,用于防止拷贝存档
         public string key;
 
-        //下面是添加需要储存的内容，目前都是Player的内容// 
+        // 下面是添加需要储存的内容，目前都是Player的内容
         // Player的属性由装备和初始值决定，无需记录
         public string Name { get; set; }
         public int Rank { get; set; }
@@ -47,7 +60,7 @@ namespace SFramework
 
             // 初始装备
             Fit = new IEquip[6];
-            Fit[(int)FitType.Weapon]= UnityHelper.FindDic(GameMainProgram.Instance.dataBaseMgr.dicEquip, "太刀");
+            Fit[(int)FitType.Weapon] = UnityHelper.FindDic(GameMainProgram.Instance.dataBaseMgr.equipDict, "太刀");
             // 初始背包，1~31值为-1
             PropNum = new int[32];
             for (int i = 1; i < 32; i++)

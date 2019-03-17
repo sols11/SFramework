@@ -1,12 +1,24 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：游戏过程管理器
+    作用：对游戏的进程进行分析，控制
+    使用：
+    补充：功能：暂停游戏，角色死亡事件，敌人死亡事件
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework
 {
     /// <summary>
-    /// 对游戏的进程进行分析，控制
-    /// 功能：暂停游戏，角色死亡事件，敌人死亡事件
+    /// 过程管理
     /// </summary>
     public class CourseMgr : IGameMgr
     {
@@ -95,7 +107,6 @@ namespace SFramework
                     Debug.LogWarning("游戏并未暂停，请检查");
             }
         }
-
 
         private void OnAfterPlayerDead()
         {

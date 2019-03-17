@@ -1,4 +1,20 @@
-﻿using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：游戏存档管理
+    作用：提供全局设置和游戏存档的写入、读取、删除功能
+    使用：接口调用
+    补充：存档即将数据保存到GameData，并写入Xml
+          读档即将数据读取，检测合法性，赋给GameData和currentPlayer
+          TODO: 存档文件的名称,自己定
+
+History:
+----------------------------------------------------------------------------*/
+
+using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 using System;
@@ -13,17 +29,20 @@ namespace SFramework
     /// </summary>
     public class GameDataMgr : IGameMgr
     {
-        // TODO:存档文件的名称,自己定
-        private string dataFileName = "MSSSave.xml";
-        private XmlSaver xs;
+        private string dataFileName = "Save.xml";       // 存档文件的名称
+        private XmlSaver xmlSaver;
 
         public GameData gameData;//实例
 
         public SettingData SettingSaveData { get; private set; }
 
+        /// <summary>
+        /// 默认在游戏开始时会读取Setting文件
+        /// </summary>
+        /// <param name="gameMain"></param>
         public GameDataMgr(GameMainProgram gameMain) : base(gameMain)
         {
-            xs = new XmlSaver();
+            xmlSaver = new XmlSaver();
             LoadSetting();
         }
 
@@ -66,11 +85,14 @@ namespace SFramework
             string gameDataFile = GetDataPath() + "/" + dataFileName;
             Debug.Log("存档已保存于" + gameDataFile);
             //将存档写入XML文件
-            string dataString = xs.SerializeObject(gameData, typeof(GameData));
-            xs.CreateXML(gameDataFile, dataString);
+            string dataString = xmlSaver.SerializeObject(gameData, typeof(GameData));
+            xmlSaver.CreateXML(gameDataFile, dataString);
         }
 
-        //读档时调用的函数,游戏开始时Player自动读档，如果没有存档那么自动创建// 
+        /// <summary>
+        /// 读档时调用的函数,游戏开始时Player会自动读档，如果没有存档那么自动创建
+        /// </summary>
+        /// <param name="currentPlayer"></param>
         public void Load(IPlayer currentPlayer)
         {
             if (currentPlayer == null)
@@ -84,10 +106,10 @@ namespace SFramework
             {
                 Debug.Log("直接从运行时存档读取数据");
             }
-            else if (xs.hasFile(gameDataFile))
+            else if (xmlSaver.hasFile(gameDataFile))
             {
-                string dataString = xs.LoadXML(gameDataFile);
-                GameData gameDataFromXML = xs.DeserializeObject(dataString, typeof(GameData)) as GameData;
+                string dataString = xmlSaver.LoadXML(gameDataFile);
+                GameData gameDataFromXML = xmlSaver.DeserializeObject(dataString, typeof(GameData)) as GameData;
 
                 //是合法存档// 
                 if (gameDataFromXML!=null && gameDataFromXML.key == SystemInfo.deviceUniqueIdentifier)
@@ -101,8 +123,8 @@ namespace SFramework
                     gameData = new GameData(); // 创建初始存档
                     Debug.Log("非法存档，重新创建新存档");
                     //将存档写入XML文件
-                    dataString = xs.SerializeObject(gameData, typeof(GameData));
-                    xs.CreateXML(gameDataFile, dataString);
+                    dataString = xmlSaver.SerializeObject(gameData, typeof(GameData));
+                    xmlSaver.CreateXML(gameDataFile, dataString);
                 }
             }
             else
@@ -110,8 +132,8 @@ namespace SFramework
                 gameData = new GameData(); // 创建初始存档
                 Debug.Log("创建新存档于" + gameDataFile);
                 //将存档写入XML文件
-                string dataString = xs.SerializeObject(gameData, typeof(GameData));
-                xs.CreateXML(gameDataFile, dataString);
+                string dataString = xmlSaver.SerializeObject(gameData, typeof(GameData));
+                xmlSaver.CreateXML(gameDataFile, dataString);
             }
             // TODO:这里读取数据
             // 如currentPlayer.Name = gameData.Name;
@@ -126,7 +148,10 @@ namespace SFramework
             }
         }
 
-        //获取路径// 
+        /// <summary>
+        /// 获取路径
+        /// </summary>
+        /// <returns></returns>
         private static string GetDataPath()
         {
             // Your game has read+write access to /var/mobile/Applications/XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX/Documents 

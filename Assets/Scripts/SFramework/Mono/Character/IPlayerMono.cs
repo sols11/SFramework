@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：
+    作用：
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,7 +38,6 @@ namespace SFramework
             iPlayerWeapon.Release();
         }
 
-
         /// <summary>
         /// 提供给EnemyAttack调用
         /// </summary>
@@ -34,7 +46,6 @@ namespace SFramework
 		{
             PlayerMedi.Player.Hurt(_playerHurtAttr);
 		}
-
 
         /// <summary>
         /// 因为Animator不能在AnimationCurve设定所以只好用帧事件

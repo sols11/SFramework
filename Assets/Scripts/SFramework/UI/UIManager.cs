@@ -1,21 +1,20 @@
-﻿/***
- * 
- *    Title: "SUIFW" UI框架项目
- *           主题： UI管理器  
- *    Description: 
- *           功能： 是整个UI框架的核心，用户程序通过本脚本，来实现框架绝大多数的功能实现。
- *                  
- *    Date: 2017
- *    Version: 0.1版本
- *    Modify Recoder: 
- *    
- * 
- *    软件开发原则：
- *    1： “高内聚，低耦合”。
- *    2： 方法的“单一职责”
- *    
- *   
- */
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：UI管理器
+    作用：整个UI框架的核心，用户程序通过本脚本，来实现框架绝大多数的功能实现。
+    使用：我们提供了一个默认的Canvas，放在Resources\UI文件夹下，Canvas下的UI会分别保存在Normal, Fixed, Popup层级下。
+           1.将你所需要显示的UI保存为Prefab，将其路径加入UIManager字典集中管理
+           2.创建UI脚本，继承ViewBase，使用SFramework命名空间，放在项目命名空间下，设置
+           3.写好button等的事件，调用UIManager的方法ShowUIForms和CloseUIForms来开关UI
+           4.这样每次只需要在当前UI脚本中写好要调用的方法和UI名称，而不用管UI对象是什么类型，就可以实现UI切换了（底层由UIManager自动管理）
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -23,45 +22,48 @@ using UnityEngine;
 
 namespace SFramework
 {
+    /// <summary>
+    /// UI框架
+    /// </summary>
     public class UIManager : IGameMgr {
-        //保存canvas的引用
+        // 保存canvas的引用
         public GameObject CanvasGO { get; private set; }
         public Camera UICamera { get; private set; }
-        public UIMaskMgr uiMaskMgr { get; private set; }
-        /* 字段 */
-        ///UI窗体预设路径(参数1：窗体预设名称，2：表示窗体预设路径)
-	    private Dictionary<string, string> _DicFormsPaths; 
-        //缓存所有UI窗体
-	    private Dictionary<string, ViewBase> _DicALLUIForms;
-        //当前显示的UI窗体
-	    public Dictionary<string, ViewBase> _DicCurrentShowUIForms;
-        //定义“栈”集合,存储显示当前所有[反向切换]的窗体类型
-        private Stack<ViewBase> _StaCurrentUIForms;
-        //UI根节点
-	    private Transform _TraCanvasTransfrom = null;
-        //全屏幕显示的节点
-	    private Transform _TraNormal = null;
-        //固定显示的节点
-	    private Transform _TraFixed = null;
-        //弹出节点
-	    private Transform _TraPopUp = null;
-        //UI管理脚本的节点
-	    private Transform _TraUIScripts = null;
+        public UIMaskMgr UiMaskMgr { get; private set; }
 
-        public UIManager(GameMainProgram gameMain):base(gameMain)
-		{
+        // 字段 
+        // UI窗体预设路径 <窗体预设名称, 窗体预设路径>
+	    private Dictionary<string, string> formToPathDict; 
+        // 缓存所有UI窗体
+	    private Dictionary<string, ViewBase> allUIFormsDict;
+        // 当前显示的UI窗体
+	    public Dictionary<string, ViewBase> currentShowUIFormsDict;
+        // 定义“栈”集合,存储显示当前所有[反向切换]的窗体类型
+        private Stack<ViewBase> currentUIFormsStack;
+        // UI根节点
+	    private Transform canvasTransform = null;
+        // 全屏幕显示的节点
+	    private Transform normalTransform = null;
+        // 固定显示的节点
+	    private Transform fixedTransform = null;
+        // 弹出节点
+	    private Transform popUpTransform = null;
+        // UI管理脚本的节点
+	    private Transform uiScriptsTransform = null;
+
+        public UIManager(GameMainProgram gameMain) : base(gameMain)
+        {
             //字段初始化
-            _DicALLUIForms = new Dictionary<string, ViewBase>();
-            _DicCurrentShowUIForms = new Dictionary<string, ViewBase>();
-            _DicFormsPaths = new Dictionary<string, string>();
-            _StaCurrentUIForms = new Stack<ViewBase>();
-            
+            allUIFormsDict = new Dictionary<string, ViewBase>();
+            currentShowUIFormsDict = new Dictionary<string, ViewBase>();
+            formToPathDict = new Dictionary<string, string>();
+            currentUIFormsStack = new Stack<ViewBase>();
         }
 
         public override void Awake()
         {
             // 智能自动读取UI文件路径【虽然方便，但是由于Canvas等Prefab不能添加进来，所以不用这个功能了】
-            if (_DicFormsPaths != null)
+            if (formToPathDict != null)
             {
                 /*DirectoryInfo dir = new DirectoryInfo(Application.dataPath + @"\Resources\UI\");
                 FileInfo[] files = dir.GetFiles("*.prefab");    // 扫描文件 GetFiles("*.txt");可以实现扫描扫描txt文件 
@@ -74,59 +76,58 @@ namespace SFramework
                     Debug.Log(@"UI\" + str);
                 }*/
 
-                _DicFormsPaths.Add("BeginBackground", @"UI\BeginBackground");
-                _DicFormsPaths.Add("CharacterSelect", @"UI\CharacterSelect");
-                _DicFormsPaths.Add("PlayerHUD", @"UI\PlayerHUD");
-                _DicFormsPaths.Add("MedicineHUD", @"UI\MedicineHUD");
-                _DicFormsPaths.Add("PauseMenu", @"UI\PauseMenu");
-                _DicFormsPaths.Add("MainMenu", @"UI\MainMenu");
-                _DicFormsPaths.Add("StageMenu", @"UI\StageMenu");
-                _DicFormsPaths.Add("TestMenu", @"UI\TestMenu");
-                _DicFormsPaths.Add("NormalMenu", @"UI\NormalMenu");
-                _DicFormsPaths.Add("TasksMenu", @"UI\TasksMenu");
-                _DicFormsPaths.Add("GlobalMap", @"UI\GlobalMap");
-                _DicFormsPaths.Add("CharacterInfo", @"UI\CharacterInfo");
-                _DicFormsPaths.Add("Inventory", @"UI\Inventory");
-                _DicFormsPaths.Add("Store", @"UI\Store");
-                _DicFormsPaths.Add("StoreSale", @"UI\StoreSale");
-                _DicFormsPaths.Add("Setting", @"UI\Setting");
-                _DicFormsPaths.Add("HelpMenu", @"UI\HelpMenu");
-                _DicFormsPaths.Add("PromptBox", @"UI\PromptBox");
-                _DicFormsPaths.Add("MessageBox", @"UI\MessageBox");
-                _DicFormsPaths.Add("Dialog", @"UI\Dialog");
-                _DicFormsPaths.Add("FadeIn", @"UI\FadeIn");
-                _DicFormsPaths.Add("FadeOut", @"UI\FadeOut");
-                _DicFormsPaths.Add("FadeInWhite", @"UI\FadeInWhite");
-                _DicFormsPaths.Add("FadeOutWhite", @"UI\FadeOutWhite");
-                
+                formToPathDict.Add("BeginBackground", @"UI\BeginBackground");
+                formToPathDict.Add("CharacterSelect", @"UI\CharacterSelect");
+                formToPathDict.Add("PlayerHUD", @"UI\PlayerHUD");
+                formToPathDict.Add("MedicineHUD", @"UI\MedicineHUD");
+                formToPathDict.Add("PauseMenu", @"UI\PauseMenu");
+                formToPathDict.Add("MainMenu", @"UI\MainMenu");
+                formToPathDict.Add("StageMenu", @"UI\StageMenu");
+                formToPathDict.Add("TestMenu", @"UI\TestMenu");
+                formToPathDict.Add("NormalMenu", @"UI\NormalMenu");
+                formToPathDict.Add("TasksMenu", @"UI\TasksMenu");
+                formToPathDict.Add("GlobalMap", @"UI\GlobalMap");
+                formToPathDict.Add("CharacterInfo", @"UI\CharacterInfo");
+                formToPathDict.Add("Inventory", @"UI\Inventory");
+                formToPathDict.Add("Store", @"UI\Store");
+                formToPathDict.Add("StoreSale", @"UI\StoreSale");
+                formToPathDict.Add("Setting", @"UI\Setting");
+                formToPathDict.Add("HelpMenu", @"UI\HelpMenu");
+                formToPathDict.Add("PromptBox", @"UI\PromptBox");
+                formToPathDict.Add("MessageBox", @"UI\MessageBox");
+                formToPathDict.Add("Dialog", @"UI\Dialog");
+                formToPathDict.Add("FadeIn", @"UI\FadeIn");
+                formToPathDict.Add("FadeOut", @"UI\FadeOut");
+                formToPathDict.Add("FadeInWhite", @"UI\FadeInWhite");
+                formToPathDict.Add("FadeOutWhite", @"UI\FadeOutWhite");
             }
         }
 
         //初始化核心数据，加载“UI窗体路径”到集合中。
         public override void Initialize()
 	    {
-            uiMaskMgr = gameMain.uiMaskMgr;
+            UiMaskMgr = gameMain.uiMaskMgr;
             //初始化加载（根UI窗体）Canvas预设
             InitRootCanvasLoading();
             //得到UI根节点、全屏节点、固定节点、弹出节点
             if (CanvasGO != null)
-                _TraCanvasTransfrom = CanvasGO.transform;
+                canvasTransform = CanvasGO.transform;
             else
             {
-                _TraCanvasTransfrom = GameObject.FindGameObjectWithTag(Common.SYS_TAG_CANVAS).transform;
+                canvasTransform = GameObject.FindGameObjectWithTag(Common.SYS_TAG_CANVAS).transform;
                 Debug.LogError("加载Canvas失败");
             }
-            _TraNormal = UnityHelper.FindTheChildNode(_TraCanvasTransfrom.gameObject, Common.SYS_NORMAL_NODE);
-            _TraFixed = UnityHelper.FindTheChildNode(_TraCanvasTransfrom.gameObject, Common.SYS_FIXED_NODE);
-            _TraPopUp = UnityHelper.FindTheChildNode(_TraCanvasTransfrom.gameObject, Common.SYS_POPUP_NODE);
-            UICamera = UnityHelper.FindTheChildNode(_TraCanvasTransfrom.gameObject, "UICamera").GetComponent<Camera>();
+            normalTransform = UnityHelper.FindTheChildNode(canvasTransform.gameObject, Common.SYS_NORMAL_NODE);
+            fixedTransform = UnityHelper.FindTheChildNode(canvasTransform.gameObject, Common.SYS_FIXED_NODE);
+            popUpTransform = UnityHelper.FindTheChildNode(canvasTransform.gameObject, Common.SYS_POPUP_NODE);
+            UICamera = UnityHelper.FindTheChildNode(canvasTransform.gameObject, "UICamera").GetComponent<Camera>();
         }
 
         public override void Release()
         {
-            _DicALLUIForms.Clear();
-            _DicCurrentShowUIForms.Clear();
-            _StaCurrentUIForms.Clear();
+            allUIFormsDict.Clear();
+            currentShowUIFormsDict.Clear();
+            currentUIFormsStack.Clear();
             GameObject.Destroy(CanvasGO);
         }
 
@@ -179,7 +180,7 @@ namespace SFramework
             //参数检查
             if (string.IsNullOrEmpty(uiFormName)) return;
             //“所有UI窗体”集合中，如果没有记录，则直接返回
-            _DicALLUIForms.TryGetValue(uiFormName,out baseUiForm);
+            allUIFormsDict.TryGetValue(uiFormName,out baseUiForm);
             if(baseUiForm==null ) return;
             //根据窗体不同的显示类型，分别作不同的关闭处理
             switch (baseUiForm.UIForm_ShowMode)
@@ -210,9 +211,9 @@ namespace SFramework
         /// <returns></returns>
         public int ShowALLUIFormCount()
         {
-            if (_DicALLUIForms != null)
+            if (allUIFormsDict != null)
             {
-                return _DicALLUIForms.Count;
+                return allUIFormsDict.Count;
             }
             else {
                 return 0;
@@ -225,9 +226,9 @@ namespace SFramework
         /// <returns></returns>
         public int ShowCurrentUIFormsCount()
         {
-            if (_DicCurrentShowUIForms != null)
+            if (currentShowUIFormsDict != null)
             {
-                return _DicCurrentShowUIForms.Count;
+                return currentShowUIFormsDict.Count;
             }
             else
             {
@@ -241,9 +242,9 @@ namespace SFramework
         /// <returns></returns>
         public int ShowCurrentStackUIFormsCount()
         {
-            if (_StaCurrentUIForms != null)
+            if (currentUIFormsStack != null)
             {
-                return _StaCurrentUIForms.Count;
+                return currentUIFormsStack.Count;
             }
             else
             {
@@ -257,7 +258,7 @@ namespace SFramework
         //初始化加载（根UI窗体）Canvas预设
 	    private void InitRootCanvasLoading()
 	    {
-	        CanvasGO= gameMain.resourcesMgr.LoadAsset(Common.SYS_PATH_CANVAS, false);
+	        CanvasGO                               = gameMain.resourcesMgr.LoadAsset(Common.SYS_PATH_CANVAS, false);
 	    }
 
         /// <summary>
@@ -270,14 +271,14 @@ namespace SFramework
 	    {
 	        ViewBase baseUIResult = null;                 //加载的返回UI窗体基类
 
-	        _DicALLUIForms.TryGetValue(uiFormsName, out baseUIResult);
+	        allUIFormsDict.TryGetValue(uiFormsName, out baseUIResult);
             if (baseUIResult==null)
 	        {
                 //加载指定名称的“UI窗体”，调用LoadUIForm
                 baseUIResult = LoadUIForm(uiFormsName);
                 // 赋值引用
                 baseUIResult.UI_Manager = this;
-                baseUIResult.UI_MaskMgr = uiMaskMgr;
+                baseUIResult.UI_MaskMgr = UiMaskMgr;
 	        }
 
 	        return baseUIResult;
@@ -300,14 +301,14 @@ namespace SFramework
             ViewBase baseUiForm=null;                     //窗体基类
 
             //根据UI窗体名称，得到对应的加载路径
-            _DicFormsPaths.TryGetValue(uiFormName, out strUIFormPaths);
+            formToPathDict.TryGetValue(uiFormName, out strUIFormPaths);
             //根据“UI窗体名称”，加载“预设克隆体”
             if (!string.IsNullOrEmpty(strUIFormPaths))
             {
                 goCloneUIPrefabs = gameMain.resourcesMgr.LoadAsset(strUIFormPaths, false);
             }
             //设置“UI克隆体”的父节点（根据克隆体中带的脚本中不同的“位置信息”）
-            if (_TraCanvasTransfrom != null && goCloneUIPrefabs != null)
+            if (canvasTransform != null && goCloneUIPrefabs != null)
             {
                 baseUiForm = goCloneUIPrefabs.GetComponent<ViewBase>();
                 if (baseUiForm == null)
@@ -318,13 +319,13 @@ namespace SFramework
                 switch (baseUiForm.UIForm_Type)
                 {
                     case UIFormType.Normal:                 //普通窗体节点
-                        goCloneUIPrefabs.transform.SetParent(_TraNormal, false);
+                        goCloneUIPrefabs.transform.SetParent(normalTransform, false);
                         break;
                     case UIFormType.Fixed:                  //固定窗体节点
-                        goCloneUIPrefabs.transform.SetParent(_TraFixed, false);
+                        goCloneUIPrefabs.transform.SetParent(fixedTransform, false);
                         break;
                     case UIFormType.PopUp:                  //弹出窗体节点
-                        goCloneUIPrefabs.transform.SetParent(_TraPopUp, false);
+                        goCloneUIPrefabs.transform.SetParent(popUpTransform, false);
                         break;
                     default:
                         break;
@@ -333,7 +334,7 @@ namespace SFramework
                 //设置隐藏
                 goCloneUIPrefabs.SetActive(false);
                 //把克隆体，加入到“所有UI窗体”（缓存）集合中。
-                _DicALLUIForms.Add(uiFormName, baseUiForm);
+                allUIFormsDict.Add(uiFormName, baseUiForm);
                 return baseUiForm;
             }
             else
@@ -355,13 +356,13 @@ namespace SFramework
 	        ViewBase baseUIFormFromAllCache;              //从“所有窗体集合”中得到的窗体
 
 	        //如果“正在显示”的集合中，存在整个UI窗体，则直接返回
-	        _DicCurrentShowUIForms.TryGetValue(uiFormName, out baseUiForm);
+	        currentShowUIFormsDict.TryGetValue(uiFormName, out baseUiForm);
 	        if (baseUiForm != null) return;
 	        //把当前窗体，加载到“正在显示”集合中
-	        _DicALLUIForms.TryGetValue(uiFormName, out baseUIFormFromAllCache);
+	        allUIFormsDict.TryGetValue(uiFormName, out baseUIFormFromAllCache);
             if (baseUIFormFromAllCache!=null)
 	        {
-                _DicCurrentShowUIForms.Add(uiFormName, baseUIFormFromAllCache);
+                currentShowUIFormsDict.Add(uiFormName, baseUIFormFromAllCache);
                 baseUIFormFromAllCache.Display();           //显示当前窗体
             }
 	    }
@@ -375,20 +376,20 @@ namespace SFramework
             ViewBase baseUIForm;                          //UI窗体
 
             //判断“栈”集合中，是否有其他的窗体，有则“冻结”处理。
-            if(_StaCurrentUIForms.Count>0)
+            if(currentUIFormsStack.Count>0)
             {
-                ViewBase topUIForm=_StaCurrentUIForms.Peek();
+                ViewBase topUIForm=currentUIFormsStack.Peek();
                 //栈顶元素作冻结处理
                 topUIForm.Freeze();
             }
             //判断“UI所有窗体”集合是否有指定的UI窗体，有则处理。
-            _DicALLUIForms.TryGetValue(uiFormName, out baseUIForm);
+            allUIFormsDict.TryGetValue(uiFormName, out baseUIForm);
             if (baseUIForm!=null)
             {
                 //当前窗口显示状态
                 baseUIForm.Display();
                 //把指定的UI窗体，入栈操作。
-                _StaCurrentUIForms.Push(baseUIForm);
+                currentUIFormsStack.Push(baseUIForm);
             }else{
                 Debug.Log("baseUIForm==null,Please Check, 参数 uiFormName=" + uiFormName);
             }
@@ -403,31 +404,31 @@ namespace SFramework
             ViewBase baseUIForm;                          //窗体基类
 
             //"正在显示集合"中如果没有记录，则直接返回。
-            _DicCurrentShowUIForms.TryGetValue(strUIFormName, out baseUIForm);
+            currentShowUIFormsDict.TryGetValue(strUIFormName, out baseUIForm);
             if(baseUIForm==null) return ;
             //指定窗体，标记为“隐藏状态”，且从"正在显示集合"中移除。
             baseUIForm.Hiding();
-            _DicCurrentShowUIForms.Remove(strUIFormName);
+            currentShowUIFormsDict.Remove(strUIFormName);
         }
 
         //（“反向切换”属性）窗体的出栈逻辑
         private void PopUIFroms()
         { 
-            if(_StaCurrentUIForms.Count>=2)
+            if(currentUIFormsStack.Count>=2)
             {
                 //出栈处理
-                ViewBase topUIForms = _StaCurrentUIForms.Pop();
+                ViewBase topUIForms = currentUIFormsStack.Pop();
                 //做隐藏处理
                 topUIForms.Hiding();
                 //出栈后，下一个窗体做“重新显示”处理。
-                ViewBase nextUIForms = _StaCurrentUIForms.Peek();   // 获取栈顶
+                ViewBase nextUIForms = currentUIFormsStack.Peek();   // 获取栈顶
                 nextUIForms.Redisplay();
                 return;
             }
-            else if (_StaCurrentUIForms.Count ==1)
+            else if (currentUIFormsStack.Count ==1)
             {
                 //出栈处理
-                ViewBase topUIForms = _StaCurrentUIForms.Pop();
+                ViewBase topUIForms = currentUIFormsStack.Pop();
                 //做隐藏处理
                 topUIForms.Hiding();
             }
@@ -446,24 +447,24 @@ namespace SFramework
             //参数检查
             if (string.IsNullOrEmpty(strUIName)) return;
 
-            _DicCurrentShowUIForms.TryGetValue(strUIName, out baseUIForm);
+            currentShowUIFormsDict.TryGetValue(strUIName, out baseUIForm);
             if (baseUIForm != null) return;
 
             //把“正在显示集合”与“栈集合”中所有窗体都隐藏。
-            foreach (ViewBase baseUI in _DicCurrentShowUIForms.Values)
+            foreach (ViewBase baseUI in currentShowUIFormsDict.Values)
             {
                 baseUI.Hiding();
             }
-            foreach (ViewBase staUI in _StaCurrentUIForms)
+            foreach (ViewBase staUI in currentUIFormsStack)
             {
                 staUI.Hiding();
             }
 
             //把当前窗体加入到“正在显示窗体”集合中，且做显示处理。
-            _DicALLUIForms.TryGetValue(strUIName, out baseUIFormFromALL);
+            allUIFormsDict.TryGetValue(strUIName, out baseUIFormFromALL);
             if (baseUIFormFromALL!=null)
             {
-                _DicCurrentShowUIForms.Add(strUIName, baseUIFormFromALL);
+                currentShowUIFormsDict.Add(strUIName, baseUIFormFromALL);
                 //窗体显示
                 baseUIFormFromALL.Display();
             }
@@ -481,19 +482,19 @@ namespace SFramework
             //参数检查
             if (string.IsNullOrEmpty(strUIName)) return;
 
-            _DicCurrentShowUIForms.TryGetValue(strUIName, out baseUIForm);
+            currentShowUIFormsDict.TryGetValue(strUIName, out baseUIForm);
             if (baseUIForm == null) return;
 
             //当前窗体隐藏状态，且“正在显示”集合中，移除本窗体
             baseUIForm.Hiding();
-            _DicCurrentShowUIForms.Remove(strUIName);
+            currentShowUIFormsDict.Remove(strUIName);
 
             //把“正在显示集合”与“栈集合”中所有窗体都定义重新显示状态。
-            foreach (ViewBase baseUI in _DicCurrentShowUIForms.Values)
+            foreach (ViewBase baseUI in currentShowUIFormsDict.Values)
             {
                 baseUI.Redisplay();
             }
-            foreach (ViewBase staUI in _StaCurrentUIForms)
+            foreach (ViewBase staUI in currentUIFormsStack)
             {
                 staUI.Redisplay();
             }
@@ -505,10 +506,10 @@ namespace SFramework
         /// <returns></returns>
         private bool ClearStackArray()
         {
-            if (_StaCurrentUIForms != null && _StaCurrentUIForms.Count>=1)
+            if (currentUIFormsStack != null && currentUIFormsStack.Count>=1)
             {
                 //清空栈集合
-                _StaCurrentUIForms.Clear();
+                currentUIFormsStack.Clear();
                 return true;
             }
 

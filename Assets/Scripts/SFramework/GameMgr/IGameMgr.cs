@@ -26,7 +26,7 @@ namespace SFramework
         // 继承后在这里声明需要被管理的对象
 
         /// <summary>
-        /// 构造函数需指定gameMain
+        /// 构造函数需指定GameMainProgram
         /// </summary>
         /// <param name="gameMain"></param>
         public IGameMgr(GameMainProgram gameMain)
@@ -34,11 +34,25 @@ namespace SFramework
 			this.gameMain = gameMain;
 		}
 
+        // 以下接口提供给GameMainProgram调用
+        /// <summary>
+        /// 初次构造后调用(Awake方法通常需要用到其他Mgr，因此需要在构造函数之后执行)
+        /// </summary>
 		public virtual void Awake() { }
+
+        /// <summary>
+        /// 每次场景加载后调用
+        /// </summary>
         public virtual void Initialize() { }
+
+        /// <summary>
+        /// 场景切换时调用
+        /// </summary>
 		public virtual void Release() { }
-		public virtual void Update() { }
+
 		public virtual void FixedUpdate() { }
 
-	}
+        public virtual void Update() { }
+
+    }
 }

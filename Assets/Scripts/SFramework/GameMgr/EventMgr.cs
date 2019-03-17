@@ -1,13 +1,26 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：事件管理器
+    作用：集中管理游戏中的UnityEvent事件和EventHandler事件，注册、移除、调用事件均通过这个系统
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using System;//EventArgs需要
+using System;   // EventArgs需要
 
 namespace SFramework
 {
     /// <summary>
-    /// 集中管理UnityEvent事件和EventHandler事件，重载方法，注册、移除、调用事件均通过这个系统
+    /// 事件系统
     /// </summary>
     public class EventMgr : IGameMgr
     {
@@ -16,10 +29,11 @@ namespace SFramework
         private Dictionary<EventName, UnityEvent> eventDictionary;
         private Dictionary<EventHandlerName, EventHandler> eventHandlerDictionary;
 
-        public EventMgr(GameMainProgram gameMain):base(gameMain)
-		{
+        public EventMgr(GameMainProgram gameMain) : base(gameMain)
+        {
             eventDictionary = new Dictionary<EventName, UnityEvent>();
         }
+
         /// <summary>
         /// 注册监听事件，如果字典中不存在那么创建
         /// </summary>
@@ -111,20 +125,6 @@ namespace SFramework
             {
                 _thisEvent(sender,e);
             }
-        }
-
-
-        public override void Initialize()
-        {
-        }
-        public override void Release()
-        {
-        }
-        public override void Update()
-        {
-        }
-        public override void FixedUpdate()
-        {
         }
 
     }

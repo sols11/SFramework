@@ -9,6 +9,7 @@ Description:
     使用：场景状态类决定了这个场景中存在哪些对象，使用哪些功能
     补充：
 History:
+    2019/03/15 之前保留了一个awake方法，现在用不上了，用构造函数实现
 ----------------------------------------------------------------------------*/
 
 using System.Collections;
@@ -24,23 +25,15 @@ namespace SFramework
 		public string SceneName { get; set; }                       // UnityScene文件对应的名称，即需要加载的场景名称
         protected SceneStateController Controller { get; set; }     // 控制者
 
-		public ISceneState()
-		{
-		}
-
-        /// <summary>
-        /// 提供给SceneStateController调用，设置场景状态机
-        /// </summary>
-        /// <param name="controller"></param>
-        public virtual void Awake(SceneStateController controller)
+		public ISceneState(SceneStateController controller)
         {
             Controller = controller;
         }
 
         public virtual void StateBegin(){ }
 		public virtual void StateEnd(){ }
-		public virtual void StateUpdate(){ }
 		public virtual void FixedUpdate(){ }
+		public virtual void StateUpdate(){ }
 
 		public override string ToString()
 		{

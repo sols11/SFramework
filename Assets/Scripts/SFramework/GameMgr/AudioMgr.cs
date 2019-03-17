@@ -1,24 +1,36 @@
-﻿using System.Collections.Generic;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：本身是一个单例，控制全局唯一的背景音乐播放器
+    作用：管理游戏中各个音乐音效的播放停止，音量大小等
+    使用：要求BGM都放在Musics目录下
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework
 {
     /// <summary>
     /// 音乐管理
-    /// 控制游戏中的音乐音效大小，以及播放BGM
-    /// 要求BGM都放在Music目录下
     /// </summary>
     public class AudioMgr:IGameMgr
     {
         private SettingData SettingSaveData { get; set; }    // 只用于获取数据，不进行写入
-        private List<string> _musicPathList;
+        private List<string> musicPathList;
         private GameObject gameObject;
         private AudioSource musicAudioSource;
-        private List<AudioSource> soundAudioSources;    // 管理所有音效
+        private List<AudioSource> soundAudioSources;         // 管理所有音效
+        private string musicResouceDir = @"Musics\";
 
         public AudioMgr(GameMainProgram gameMain) : base(gameMain)
         {
-            _musicPathList = new List<string>();
+            musicPathList = new List<string>();
             soundAudioSources = new List<AudioSource>();
         }
 
@@ -35,8 +47,8 @@ namespace SFramework
                 musicAudioSource.volume = SettingSaveData.MusicVolume / 100.0f;    // /100
                 Object.DontDestroyOnLoad(gameObject);
             }
-
-            _musicPathList.Add("FinalBattle");
+            // 添加音乐
+            musicPathList.Add("WhiteLie");
         }
 
         public override void Release()
@@ -62,14 +74,14 @@ namespace SFramework
 
         public void PlayMusic(int index)
         {
-            musicAudioSource.clip = gameMain.resourcesMgr.LoadResource<AudioClip>(@"Music\" + _musicPathList[index], false);
+            musicAudioSource.clip = gameMain.resourcesMgr.LoadResource<AudioClip>(musicResouceDir + musicPathList[index], false);
             musicAudioSource.Play();
         }
 
         public void PlayMusic(string name)
         {
-            int index = _musicPathList.FindIndex(path => path == name);
-            musicAudioSource.clip = gameMain.resourcesMgr.LoadResource<AudioClip>(@"Music\" + _musicPathList[index], false);
+            int index = musicPathList.FindIndex(path => path == name);
+            musicAudioSource.clip = gameMain.resourcesMgr.LoadResource<AudioClip>(musicResouceDir + musicPathList[index], false);
             musicAudioSource.Play();
         }
 

@@ -39,6 +39,9 @@ namespace SFramework
 
         public SceneStateController sceneStateController = new SceneStateController();
 
+        [SerializeField]
+        private SceneState sceneState;
+
         void Awake()
         {
             if (_instance == null)
@@ -54,19 +57,19 @@ namespace SFramework
 
 		void Start()
 		{
-			// 要测试的场景，默认
-			sceneStateController.SetState<StartScene>(false);
+            // 要测试的场景，只需要在Inspector中设置就行了
+            sceneStateController.SetState(sceneState, false);
 		}
 
-		void Update()
+        void FixedUpdate()
+        {
+            //物理相关的处理
+            sceneStateController.FixedUpdate();
+        }
+
+        void Update()
 		{
 			sceneStateController.StateUpdate();
-		}
-
-		void FixedUpdate()
-		{
-			//物理相关的处理
-			sceneStateController.FixedUpdate();
 		}
 	}
 }

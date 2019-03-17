@@ -17,7 +17,7 @@ namespace SFramework
 			if (GameObjectInScene != null)
 			{
 				animator = GameObjectInScene.GetComponent<Animator>();
-				Rg2d = GameObjectInScene.GetComponent<Rigidbody2D>();
+				Rgbd = GameObjectInScene.GetComponent<Rigidbody>();
                 // 关联中介者
                 EnemyMedi = new EnemyMediator(this);
                 EnemyMedi.Initialize();

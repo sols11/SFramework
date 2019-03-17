@@ -1,4 +1,17 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：敌方角色控制系统
+    作用：存储整个场景中的所有Enemy，负责敌方角色的创建，管理，删除
+    使用：调用接口
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +19,6 @@ namespace SFramework
 {
     /// <summary>
     /// 敌人控制系统
-    /// 负责敌人的创建，管理，删除
-    /// 存储整个场景中的所有Enemy
     /// </summary>
 	public class EnemyMgr : IGameMgr
     {
@@ -32,15 +43,15 @@ namespace SFramework
             enemysInScene.Clear();
             gameMain.eventMgr.StopListening(EventName.PlayerDead, NotifyPlayerDead);
         }
-        public override void Update()
-        {
-            foreach (IEnemy e in enemysInScene)
-                e.Update();
-        }
         public override void FixedUpdate()
         {
             foreach (IEnemy e in enemysInScene)
                 e.FixedUpdate();
+        }
+        public override void Update()
+        {
+            foreach (IEnemy e in enemysInScene)
+                e.Update();
         }
         public void NotifyPlayerDead()
         {

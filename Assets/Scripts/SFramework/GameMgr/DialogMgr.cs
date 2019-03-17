@@ -1,4 +1,17 @@
-﻿using UnityEngine;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：对话系统
+    作用：管理游戏中的所有对话。只是保存所有对话，对话实质实现由UIDialog控制
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Events;
@@ -7,8 +20,6 @@ namespace SFramework
 {
     /// <summary>
     /// 对话管理
-    /// 只是保存所有对话
-    /// 对话实质实现由UIDialog控制
     /// </summary>
     public class DialogMgr:IGameMgr
     {
@@ -34,7 +45,6 @@ namespace SFramework
             }
             UIDialog.StartDialog(talks,dialogCompleteAction);
         }
-
 
     }
 }
