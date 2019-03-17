@@ -49,6 +49,7 @@ namespace SFramework
             }
             // 添加音乐
             musicPathList.Add("WhiteLie");
+            Debug.Log("音乐列表确认完毕");
         }
 
         public override void Release()

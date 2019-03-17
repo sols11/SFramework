@@ -7,7 +7,7 @@ namespace SFramework
     /// <summary>
     ///+ 敌人武器所需属性
     ///+ EnemyMediator
-    ///武器的控制层
+    /// 武器的控制层
     /// </summary>
     public abstract class IEnemyWeapon : IWeaponMono
 	{

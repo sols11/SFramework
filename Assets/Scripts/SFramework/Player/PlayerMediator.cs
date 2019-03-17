@@ -49,7 +49,7 @@ namespace SFramework
                     PlayerMono.WeaponCollider = PlayerWeapon.WeaponCollider;
                 }
                 else
-                    Debug.LogError("iPlayerWeapon未赋值");
+                    Debug.LogWarning("iPlayerWeapon未赋值");
                 UpdatePlayerWeapon(PlayerMono.iPlayerWeapon);
             }
         }

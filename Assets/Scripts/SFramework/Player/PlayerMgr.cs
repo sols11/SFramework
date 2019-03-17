@@ -56,17 +56,17 @@ namespace SFramework
 
         public override void Update()
         {
-            if(CurrentPlayer!=null&& CanInput)
+            if (CurrentPlayer != null && CanInput)
                 CurrentPlayer.Update();
-		}
+        }
 
-	    public void BuildPlayer(Vector3 position,Quaternion quaternion)
+	    public void BuildPlayer(Vector3 position, Quaternion quaternion)
 	    {
-            //if(CurrentPlayer==null)
-	            //SetCurrentPlayer(new DreamKeeper.PlayerYuka(GameMainProgram.Instance.resourcesMgr.
-                    //LoadAsset(@"Players\BlockBattle", false,position, quaternion)));
-	        //gameMain.gameDataMgr.Load(CurrentPlayer);   // 读档
-	    }
+            if (CurrentPlayer == null)
+                SetCurrentPlayer(new ProjectScript.PlayerMain(GameMainProgram.Instance.resourcesMgr.
+                    LoadAsset(@"Players\Player", false, position, quaternion)));
+            gameMain.gameDataMgr.Load(CurrentPlayer);   // 读档
+        }
 
         public void SetCurrentPlayer(IPlayer player)
 		{

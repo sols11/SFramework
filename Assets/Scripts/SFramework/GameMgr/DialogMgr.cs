@@ -23,7 +23,7 @@ namespace SFramework
     /// </summary>
     public class DialogMgr:IGameMgr
     {
-        private Dictionary<string,List<string>> dicTalks;
+        private Dictionary<string,List<string>> talksDict;
 
         public DialogMgr(GameMainProgram gameMain) : base(gameMain)
         {
@@ -31,12 +31,13 @@ namespace SFramework
 
         public override void Awake()
         {
-            //dicTalks= gameMain.fileMgr.LoadJsonDataBase<Dictionary<string, List<string>>>("Dialog");
+            talksDict= gameMain.fileMgr.LoadJsonDataBase<Dictionary<string, List<string>>>("Dialog");
+            Debug.Log("成功读取对话数据");
         }
 
         public void StartDialog(string key,UnityAction dialogCompleteAction=null)
         {
-            List<string> talks = UnityHelper.FindDic(dicTalks, key);
+            List<string> talks = UnityHelper.FindDic(talksDict, key);
 
             if (talks == null||talks.Count==0)
             {

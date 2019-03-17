@@ -38,9 +38,14 @@ namespace SFramework
         public override void Awake()
         {
             equipDict = gameMain.fileMgr.LoadJsonDataBase<Dictionary<string, IEquip>>("Equip");
+            Debug.Log("Equip数据加载完毕");
             Props = gameMain.fileMgr.LoadJsonDataBase<IProp[]>("Prop");
+            Debug.Log("Prop数据库加载完毕");
             enemyEquipDict = gameMain.fileMgr.LoadJsonDataBase<Dictionary<string, IEquip>>("EnemyEquip");
+            Debug.Log("EnemyEquip数据加载完毕");
             Tasks = gameMain.fileMgr.LoadJsonDataBase<List<Task>>("Tasks");
+            Debug.Log("Tasks数据加载完毕");
+            Debug.Log("数据库文件全部加载完毕");
         }
 
     }

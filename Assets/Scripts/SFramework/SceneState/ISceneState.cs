@@ -24,18 +24,41 @@ namespace SFramework
 	{
 		public string SceneName { get; set; }                       // UnityScene文件对应的名称，即需要加载的场景名称
         protected SceneStateController Controller { get; set; }     // 控制者
+        protected GameMainProgram gameMainProgram;    // 主程序
 
-		public ISceneState(SceneStateController controller)
+        public ISceneState(SceneStateController controller)
         {
             Controller = controller;
         }
 
-        public virtual void StateBegin(){ }
-		public virtual void StateEnd(){ }
-		public virtual void FixedUpdate(){ }
-		public virtual void StateUpdate(){ }
+        /// <summary>
+        /// 初始化GameMainProgram，初始化场景，场景初始设置
+        /// </summary>
+        public virtual void StateBegin()
+        {
+            gameMainProgram = GameMainProgram.Instance;
+            gameMainProgram.Initialize();
+        }
 
-		public override string ToString()
+        /// <summary>
+        /// 结束场景
+        /// </summary>
+		public virtual void StateEnd()
+        {
+            gameMainProgram.Release();
+        }
+
+        public virtual void FixedUpdate()
+        {
+            gameMainProgram.FixedUpdate();
+        }
+
+        public virtual void StateUpdate()
+        {
+            gameMainProgram.Update();
+        }
+
+        public override string ToString()
 		{
 		    return SceneName;
 		}

@@ -19,8 +19,6 @@ namespace SFramework
 {
 	public class StartScene : ISceneState
 	{
-		private GameMainProgram gameMainProgram;    // 主程序
-
         public StartScene(SceneStateController controller) : base(controller)
         {
             this.SceneName = "Start";
@@ -28,23 +26,31 @@ namespace SFramework
 
         public override void StateBegin()
         {
-            gameMainProgram = GameMainProgram.Instance;
-            gameMainProgram.Initialize();
+            base.StateBegin();
+            // 场景初始化
+            gameMainProgram.playerMgr.BuildPlayer(Vector3.zero, Quaternion.identity);
+            gameMainProgram.playerMgr.CanInput = true;  // 接受输入
+                                                        // 其他角色在Player之后创建
+
+            // UI，BGM
+            //GameMainProgram.Instance.uiManager.ShowUIForms("FadeOut");
+            gameMainProgram.audioMgr.PlayMusic(0);
         }
 
         public override void StateEnd()
 		{
-			gameMainProgram.Release();
+            // 先Release其他成员，再调用base
+            base.StateEnd();
 		}
 
 		public override void FixedUpdate()
 		{
-			gameMainProgram.FixedUpdate();
+            base.FixedUpdate();
 		}
 
         public override void StateUpdate()
         {
-            gameMainProgram.Update();
+            base.StateUpdate();
         }
 
     }

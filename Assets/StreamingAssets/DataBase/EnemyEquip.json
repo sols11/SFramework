@@ -1,21 +1,4 @@
 ﻿{
-        "Type": 2,
-        "Level": 0,
-        "CanLevelUP": false,
-        "IconPath": "Icons\\Cloth\\Cloth",
-        "Name": "泰坦之盾",
-        "Detail": "",
-        "CanSale": false,
-        "Price": 0,
-        "SalePrice": 10,
-        "Special": 0,
-        "HP": 500,
-        "SP": 0,
-        "Attack": 0,
-        "Defend": 0,
-        "Crit": 0,
-        "Speed": 0
-    },
     "野猪武器": {
         "Type": 3,
         "IconPath": "Icons\\Weapon\\Katana",

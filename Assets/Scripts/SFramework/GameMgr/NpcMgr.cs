@@ -22,35 +22,35 @@ namespace SFramework
     /// </summary>
     public class NpcMgr:IGameMgr
     {
-        private List<INPC> npcInScene;
-        private Dictionary<string, string> dicNpcPaths;
+        private List<INPC> npcInSceneList;
+        private Dictionary<string, string> npcPathDict;
 
         public NpcMgr(GameMainProgram gameMain) : base(gameMain)
         {
-            npcInScene=new List<INPC>();
-            dicNpcPaths=new Dictionary<string, string>();
+            npcInSceneList = new List<INPC>();
+            npcPathDict = new Dictionary<string, string>();
         }
 
         public override void Awake()
         {
             // 新的Npc在这里添加
-            if (dicNpcPaths != null)
+            if (npcPathDict != null)
             {
-                // dicNpcPaths.Add("Merchant", @"Npcs\NpcMerchant");
+                // npcPathDict.Add("Merchant", @"Npcs\NpcMerchant");
             }
         }
 
         public override void Update()
         {
-            foreach (INPC n in npcInScene)
+            foreach (INPC n in npcInSceneList)
                 n.OnUpdate();
         }
 
         public override void Release()
         {
-            foreach (INPC n in npcInScene)
+            foreach (INPC n in npcInSceneList)
                 n.Release();
-            npcInScene.Clear();
+            npcInSceneList.Clear();
         }
 
         /// <summary>
@@ -60,13 +60,13 @@ namespace SFramework
         public void CreateNpc(string npcName)
         {
             if (string.IsNullOrEmpty(npcName)) return;
-            GameObject go = gameMain.resourcesMgr.LoadAsset(UnityHelper.FindDic(dicNpcPaths, npcName));
+            GameObject go = gameMain.resourcesMgr.LoadAsset(UnityHelper.FindDic(npcPathDict, npcName));
             INPC npc = null;
             if (go)
                 npc = go.GetComponent<INPC>();
             if (npc != null)
             {
-                npcInScene.Add(npc);
+                npcInSceneList.Add(npc);
                 npc.Initialize();
             }
             else
@@ -79,11 +79,11 @@ namespace SFramework
         {
             if (string.IsNullOrEmpty(npcName)) return;
             // 找到然后移除
-            foreach (INPC n in npcInScene)
+            foreach (INPC n in npcInSceneList)
             {
                 if (n.gameObject.name == npcName)
                 {
-                    npcInScene.Remove(n);
+                    npcInSceneList.Remove(n);
                     n.Release();
                 }
             }

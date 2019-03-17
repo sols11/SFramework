@@ -96,8 +96,8 @@ namespace SFramework
             languageMgr.Awake();
             uiManager.Awake();
             audioMgr.Awake();
-            //dialogMgr.Awake();
-            //npcMgr.Awake();
+            dialogMgr.Awake();
+            npcMgr.Awake();
             Debug.Log("框架初始化完成");
         }
 

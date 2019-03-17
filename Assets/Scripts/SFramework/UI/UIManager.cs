@@ -101,6 +101,7 @@ namespace SFramework
                 formToPathDict.Add("FadeInWhite", @"UI\FadeInWhite");
                 formToPathDict.Add("FadeOutWhite", @"UI\FadeOutWhite");
             }
+            Debug.Log("UI文件确认完毕");
         }
 
         //初始化核心数据，加载“UI窗体路径”到集合中。
