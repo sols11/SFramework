@@ -30,8 +30,15 @@ namespace SFramework
         protected GameData gameData;
 
 		public float Speed { get; set; }
+        public int Gold { get; set; }
+        public bool CanAttack { get; set; }
+        // 装备和道具
+        public IEquip[] Fit { get; set; }
+        public int[] PropNum { get; set; }
+        // 任务数据
+        public List<TaskData> TasksData { get; set; }
 
-        // set时调用UpdateHP_SP()
+        // Player的HP,SP需要更新UI，即set时调用UpdateHP_SP()
         public override int CurrentHP
         {
             get { return base.CurrentHP; }

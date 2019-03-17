@@ -1,11 +1,24 @@
-﻿using System.Collections;
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：协程控制系统
+    作用：让不继承Monobehavior的物体也能够使用协程
+    使用：CoroutineMgr.Instance.方法
+    补充：单例模式。
+History:
+----------------------------------------------------------------------------*/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework
 {
     /// <summary>
-    /// 协程管理器，让非Mono也能使用Mono方法
+    /// 协程管理器
     /// </summary>
     public class CoroutineMgr : MonoBehaviour
     {
@@ -39,37 +52,7 @@ namespace SFramework
             DontDestroyOnLoad(gameObject);
         }
 
-        //public new void CancelInvoke()
-        //{
-        //    base.CancelInvoke();
-        //}
-
-        //public new void CancelInvoke(string methodName)
-        //{
-        //    base.CancelInvoke(methodName);
-        //}
-
-        //public new void Invoke(string methodName,float time)
-        //{
-        //    base.Invoke(methodName,time);
-        //}
-
-        //public new void InvokeRepeating(string methodName, float time, float repeatRate)
-        //{
-        //    base.InvokeRepeating(methodName, time, repeatRate);
-        //}
-
-        //public new bool IsInvoking()
-        //{
-        //    return base.IsInvoking();
-        //}
-
-        //public new bool IsInvoking(string methodName)
-        //{
-        //    return base.IsInvoking(methodName);
-        //}
-
-        ///其实这里不封装也能调用，因为继承了
+        // 其实这里不封装也能调用，因为继承了
         public new Coroutine StartCoroutine(IEnumerator routine)
         {
             return base.StartCoroutine(routine);

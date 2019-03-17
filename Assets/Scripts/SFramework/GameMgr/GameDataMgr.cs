@@ -10,7 +10,7 @@ Description:
     补充：存档即将数据保存到GameData，并写入Xml
           读档即将数据读取，检测合法性，赋给GameData和currentPlayer
           TODO: 存档文件的名称,自己定
-
+                读档数据的更新，自行填写
 History:
 ----------------------------------------------------------------------------*/
 
@@ -32,7 +32,7 @@ namespace SFramework
         private string dataFileName = "Save.xml";       // 存档文件的名称
         private XmlSaver xmlSaver;
 
-        public GameData gameData;//实例
+        public GameData gameData;                       // 实例
 
         public SettingData SettingSaveData { get; private set; }
 
@@ -111,7 +111,7 @@ namespace SFramework
                 string dataString = xmlSaver.LoadXML(gameDataFile);
                 GameData gameDataFromXML = xmlSaver.DeserializeObject(dataString, typeof(GameData)) as GameData;
 
-                //是合法存档// 
+                //是合法存档
                 if (gameDataFromXML!=null && gameDataFromXML.key == SystemInfo.deviceUniqueIdentifier)
                 {
                     //将存档赋给当前实例
@@ -122,7 +122,7 @@ namespace SFramework
                 {
                     gameData = new GameData(); // 创建初始存档
                     Debug.Log("非法存档，重新创建新存档");
-                    //将存档写入XML文件
+                    // 将存档写入XML文件
                     dataString = xmlSaver.SerializeObject(gameData, typeof(GameData));
                     xmlSaver.CreateXML(gameDataFile, dataString);
                 }
@@ -135,9 +135,7 @@ namespace SFramework
                 string dataString = xmlSaver.SerializeObject(gameData, typeof(GameData));
                 xmlSaver.CreateXML(gameDataFile, dataString);
             }
-            // TODO:这里读取数据
-            // 如currentPlayer.Name = gameData.Name;
-
+            UpdatePlayerData(currentPlayer);
         }
 
         public void DeleteSaveData()
@@ -175,6 +173,23 @@ namespace SFramework
             else
                 // TODO：这里先用着dataPath，游戏做成了换成persistentDataPath
                 return Application.dataPath;
+        }
+
+        /// <summary>
+        /// TODO:这里读取数据
+        /// </summary>
+        private void UpdatePlayerData(IPlayer currentPlayer)
+        {
+            // 值类型
+            currentPlayer.Name = gameData.Name;
+            currentPlayer.Rank = gameData.Rank;
+            currentPlayer.Gold = gameData.Gold;
+            currentPlayer.CanAttack = gameData.CanAttack;
+            // 引用类型
+            currentPlayer.Fit = gameData.Fit;
+            currentPlayer.PropNum = gameData.PropNum;
+            currentPlayer.TasksData = gameData.TasksData;
+            currentPlayer.PlayerMedi.FitEquip();
         }
     }
 }

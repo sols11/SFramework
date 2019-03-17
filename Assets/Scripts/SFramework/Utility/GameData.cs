@@ -30,17 +30,13 @@ namespace SFramework
         public string Name { get; set; }
         public int Rank { get; set; }
         public int Gold { get; set; }
-        public int MedicineID { get; set; }
         // 技能开关
-        public bool CanAvoid { get; set; }
-        public bool CanAttack2 { get; set; }
-        public bool CanAttack3 { get; set; }
-        public bool CanDush { get; set; }
+        public bool CanAttack { get; set; }
         // 装备和道具
         public IEquip[] Fit { get; set; }
-        public int[] PropNum { get; set; }  // 和Player使用同一地址
-        // 商店数据
-        public bool[] HasProp { get; set; }    // 存储商店售卖哪些道具
+        public int[] PropNum { get; set; }     // 和Player使用同一地址
+        // 任务数据
+        public List<TaskData> TasksData { get; set; }
 
         public GameData()
         {
@@ -51,13 +47,7 @@ namespace SFramework
             Rank = 1;
             Gold = 100;
 
-            // 【以后需要删掉】
-            CanAvoid = true;
-            CanAttack2 = true;
-            CanAttack3 = true;
-            CanDush = true;
-            // 【以后需要删掉】
-
+            CanAttack = true;
             // 初始装备
             Fit = new IEquip[6];
             Fit[(int)FitType.Weapon] = UnityHelper.FindDic(GameMainProgram.Instance.dataBaseMgr.equipDict, "太刀");
@@ -66,11 +56,8 @@ namespace SFramework
             for (int i = 1; i < 32; i++)
                 PropNum[i] = -1;
             PropNum[0] = 3;
-            MedicineID = 0;
             // 其他
-            HasProp=new bool[32];
-            HasProp[0] = true;
-            HasProp[1] = true;
+            TasksData = new List<TaskData>();
         }
     }
 

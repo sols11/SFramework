@@ -45,12 +45,12 @@ namespace SFramework
 			}
 		}
 
+        // 继承Mono的Mgr，不需要通过GameMainProgram调用，如CoroutineMgr
         public ResourcesMgr resourcesMgr;
         public FileMgr fileMgr;
         public DataBaseMgr dataBaseMgr;
         public GameDataMgr gameDataMgr;
         public LanguageMgr languageMgr;
-        //public CoroutineMgr coroutineMgr; // 继承Mono的Mgr，不需要通过GameMainProgram调用
         public PlayerMgr playerMgr;
         public EnemyMgr enemyMgr;
 	    public NpcMgr npcMgr;

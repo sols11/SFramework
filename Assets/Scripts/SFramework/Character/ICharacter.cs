@@ -39,6 +39,7 @@ namespace SFramework
         public string Name { get; set; }
 		public float MoveSpeed { get; set; }
 		public float RotSpeed { get; set; }
+        public int Rank { get; set; }           // 等级
         public float HPpercent { get; protected set; }
         public float SPpercent { get; protected set; }
 
