@@ -7,7 +7,7 @@ Description:
     简介：相机控制系统
     作用：
     使用：
-    补充：
+    补充：TODO：如果需要一些特殊效果，可以添加DoTween之类的插件
 History:
 ----------------------------------------------------------------------------*/
 
@@ -24,6 +24,7 @@ namespace SFramework {
         private static CameraCtrl _instance;
         private Camera mainCamera;
         private ShakeObject shakeComponent;
+        private AutoCam autoCam;
 
         public static CameraCtrl Instance
         {
@@ -54,6 +55,7 @@ namespace SFramework {
             if (mainCamera)
             {
                 shakeComponent = mainCamera.GetComponent<ShakeObject>();
+                autoCam = mainCamera.GetComponentInParent<AutoCam>();
             }
         }
 
@@ -77,7 +79,16 @@ namespace SFramework {
         /// <param name="z_"></param>
         public void SetAreaLimit(float x, float x_, float z, float z_)
         {
+            autoCam.SetAreaLimit(x, x_, z, z_);
         }
 
+        /// <summary>
+        /// 设置是否启用AutoCam
+        /// </summary>
+        /// <param name="enable"></param>
+        public void EnableAutoCam(bool enable)
+        {
+            autoCam.enabled = enable;
+        }
     }
 }
