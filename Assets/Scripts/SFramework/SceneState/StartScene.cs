@@ -33,7 +33,7 @@ namespace SFramework
                                                         // 其他角色在Player之后创建
 
             // UI，BGM
-            //GameMainProgram.Instance.uiManager.ShowUIForms("FadeOut");
+            GameMainProgram.Instance.uiManager.ShowUIForms("FadeOut");
             gameMainProgram.audioMgr.PlayMusic(0);
         }
 
