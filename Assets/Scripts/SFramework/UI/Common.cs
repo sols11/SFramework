@@ -1,20 +1,20 @@
-﻿/***
- * 
- *    Title: "SUIFW" UI框架项目
- *           主题： 框架核心参数  
- *    Description: 
- *           功能：
- *           1： 系统常量
- *           2： 全局性方法。
- *           3： 系统枚举类型
- *           4： 委托定义
- *                          
- *    Date: 2017
- *    Version: 0.1版本
- *    Modify Recoder: 
- *    
- *   
- */
+﻿/*----------------------------------------------------------------------------
+Author:
+    Anotts
+Date:
+    2017/08/01
+Description:
+    简介：UI框架核心参数
+    作用：包括
+          1：系统常量
+          2：全局性方法。
+          3：系统枚举类型
+          4：委托定义
+    使用：
+    补充：
+History:
+----------------------------------------------------------------------------*/
+
 using UnityEngine;
 
 namespace SFramework
@@ -87,7 +87,8 @@ namespace SFramework
     public class Common : MonoBehaviour
     {
         /* 路径常量 */
-        public const string SYS_PATH_CANVAS = @"UI\Canvas";
+        public const string SYS_PATH_CANVAS = "Canvas";
+        public const string SYS_PATH_UI = @"\Resources\UI\";
         /* 标签常量 */
         public const string SYS_TAG_CANVAS = "Canvas";
         /* 节点常量 */

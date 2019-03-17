@@ -57,7 +57,5 @@ namespace SFramework
             else
 	            AnimatorComponent.applyRootMotion =false;
 	    }
-
-        public virtual void TrailSwitch(int open) { }
     }
 }

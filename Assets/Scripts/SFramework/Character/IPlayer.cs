@@ -68,6 +68,7 @@ namespace SFramework
         /// <param name="gameObject"></param>
         public IPlayer(GameObject gameObject):base(gameObject)
         {
+            Speed = 5;
             if (GameObjectInScene != null)
             {
                 animator = GameObjectInScene.GetComponent<Animator>();

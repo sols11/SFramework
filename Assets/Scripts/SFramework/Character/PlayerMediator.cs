@@ -25,13 +25,16 @@ namespace SFramework
     {
         public IPlayer Player { get; set; }
         public IPlayerMono PlayerMono { get; set; }
-        public IPlayerWeapon PlayerWeapon { get; set; }
+        public IPlayerWeapon PlayerWeapon { get; set; }     // 可为null
 
         public PlayerMediator(IPlayer player)
         {
             Player = player;
         }
 
+        /// <summary>
+        /// 建立3个成员的关联
+        /// </summary>
         public void Initialize()
         {
             PlayerMono = Player.GameObjectInScene.GetComponent<IPlayerMono>();
@@ -44,7 +47,7 @@ namespace SFramework
                 PlayerMono.Initialize();
                 if (PlayerWeapon != null)
                 {
-                    PlayerWeapon.PlayerMedi = this; // 引用
+                    PlayerWeapon.PlayerMedi = this;     // 引用
                     PlayerWeapon.Initialize();
                     PlayerMono.WeaponCollider = PlayerWeapon.WeaponCollider;
                 }
@@ -70,6 +73,8 @@ namespace SFramework
         /// <param name="_weapon">哪一个PlayerWeapon</param>
         private void UpdatePlayerWeapon(IPlayerWeapon playerWeapon)
         {
+            if (playerWeapon == null)
+                return;
         }
 
     }

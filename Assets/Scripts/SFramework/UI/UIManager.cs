@@ -13,6 +13,7 @@ Description:
            4.这样每次只需要在当前UI脚本中写好要调用的方法和UI名称，而不用管UI对象是什么类型，就可以实现UI切换了（底层由UIManager自动管理）
     补充：
 History:
+    2019/03/17 智能自动读取UI文件路径
 ----------------------------------------------------------------------------*/
 
 using System.Collections;
@@ -62,46 +63,21 @@ namespace SFramework
 
         public override void Awake()
         {
-            // 智能自动读取UI文件路径【虽然方便，但是由于Canvas等Prefab不能添加进来，所以不用这个功能了】
+            // 智能自动读取UI文件路径（Canvas不要添加）
             if (formToPathDict != null)
             {
-                /*DirectoryInfo dir = new DirectoryInfo(Application.dataPath + @"\Resources\UI\");
+                DirectoryInfo dir = new DirectoryInfo(Application.dataPath + Common.SYS_PATH_UI);
                 FileInfo[] files = dir.GetFiles("*.prefab");    // 扫描文件 GetFiles("*.txt");可以实现扫描扫描txt文件 
                 foreach (FileInfo fi in files)
                 {
                     // 移除文件名后缀
                     string str = fi.Name.Remove(fi.Name.LastIndexOf('.'));
                     // 加入路径字典
-                    _DicFormsPaths.Add(str, @"UI\" + str);
-                    Debug.Log(@"UI\" + str);
-                }*/
-
-                formToPathDict.Add("BeginBackground", @"UI\BeginBackground");
-                formToPathDict.Add("CharacterSelect", @"UI\CharacterSelect");
-                formToPathDict.Add("PlayerHUD", @"UI\PlayerHUD");
-                formToPathDict.Add("MedicineHUD", @"UI\MedicineHUD");
-                formToPathDict.Add("PauseMenu", @"UI\PauseMenu");
-                formToPathDict.Add("MainMenu", @"UI\MainMenu");
-                formToPathDict.Add("StageMenu", @"UI\StageMenu");
-                formToPathDict.Add("TestMenu", @"UI\TestMenu");
-                formToPathDict.Add("NormalMenu", @"UI\NormalMenu");
-                formToPathDict.Add("TasksMenu", @"UI\TasksMenu");
-                formToPathDict.Add("GlobalMap", @"UI\GlobalMap");
-                formToPathDict.Add("CharacterInfo", @"UI\CharacterInfo");
-                formToPathDict.Add("Inventory", @"UI\Inventory");
-                formToPathDict.Add("Store", @"UI\Store");
-                formToPathDict.Add("StoreSale", @"UI\StoreSale");
-                formToPathDict.Add("Setting", @"UI\Setting");
-                formToPathDict.Add("HelpMenu", @"UI\HelpMenu");
-                formToPathDict.Add("PromptBox", @"UI\PromptBox");
-                formToPathDict.Add("MessageBox", @"UI\MessageBox");
-                formToPathDict.Add("Dialog", @"UI\Dialog");
-                formToPathDict.Add("FadeIn", @"UI\FadeIn");
-                formToPathDict.Add("FadeOut", @"UI\FadeOut");
-                formToPathDict.Add("FadeInWhite", @"UI\FadeInWhite");
-                formToPathDict.Add("FadeOutWhite", @"UI\FadeOutWhite");
+                    formToPathDict.Add(str, @"UI\" + str);
+                    Debug.Log("UI确认：" + str);
+                }
+                Debug.Log("UI文件确认完毕");
             }
-            Debug.Log("UI文件确认完毕");
         }
 
         //初始化核心数据，加载“UI窗体路径”到集合中。
@@ -259,7 +235,7 @@ namespace SFramework
         //初始化加载（根UI窗体）Canvas预设
 	    private void InitRootCanvasLoading()
 	    {
-	        CanvasGO                               = gameMain.resourcesMgr.LoadAsset(Common.SYS_PATH_CANVAS, false);
+	        CanvasGO = gameMain.resourcesMgr.LoadAsset(Common.SYS_PATH_CANVAS, false);
 	    }
 
         /// <summary>
