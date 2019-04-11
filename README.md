@@ -1,17 +1,27 @@
 # SFramework
 基于Unity引擎的万能游戏框架 Unity-Framework
 
-- 独立设计开发的原创游戏框架，持续更新中
+- 独立设计开发的原创游戏框架，具备良好的可扩展性
 - 控制游戏生命周期，框架尽量不继承Monobehavior
 - 基于单例模式，外观模式，桥接模式等设计模式
 - 可使用PhysX物理引擎，动画帧事件等基于Monobehavior的功能
 - 代码追求精简高效，核心代码仅5000+行
 
-
+![游戏循环](http://on-img.com/chart_image/5982b660e4b0e56e5d06455c.png)
 
 ## 项目工程结构
 
+Plugins：插件
 
+Repo：资源
+
+Resources：热加载资源
+
+Scenes：场景
+
+Scripts：脚本
+
+StreamingAssets：热加载配置文件
 
 ## 命名规范
 
@@ -38,13 +48,17 @@ History:
 
 ## 安装集成
 
-可以直接Clone到项目目录下，也可以通过安装unitypackage包的形式集成
+建议直接以此项目为基础进行开发。
 
-尽量不要让框架本身和项目产生耦合。
+如果要集成到其他项目，可以直接Clone到项目目录下，也可以通过安装unitypackage包的形式集成。
 
-项目开发时往往可能需要对框架进行修改，这时只需要开一个branch，将修改提交到branch，最后pull request到框架原来的Git项目（即SFramewok）就行了。
+尽量不要让框架本身和项目产生耦合，框架的命名空间是SFramework，项目的命名空间默认是ProjectScript，需要区分开。
 
-【不知道Merge的时候是否要保持目录层级一致，再说吧】
+项目开发时往往可能需要对框架进行修改，这时只需要开一个branch，将修改提交到branch，最后pull request到框架原来的Git项目（即SFramewok）即可。
+
+## 快速上手
+
+
 
 
 
