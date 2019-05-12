@@ -7,7 +7,7 @@
 - 可使用PhysX物理引擎，动画帧事件等基于Monobehavior的功能
 - 代码追求精简高效，核心代码仅5000+行
 
-![游戏循环](http://on-img.com/chart_image/5982b660e4b0e56e5d06455c.png)
+![游戏循环](https://img2018.cnblogs.com/blog/1334897/201905/1334897-20190512160845711-812392312.png)
 
 ## 项目工程结构
 
